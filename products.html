@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Fresh Shop - Organo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f8f9fa;
+  --card-bg: #fff;
+  --text-color: #333;
+  --text-secondary: #555;
+  --border-color: #f0f0f0;
+  --header-bg: #2e7d32;
+  --header-text: #fff;
+  --filter-bg: #fff;
+  --filter-text: #555;
+  --filter-active-bg: #2e7d32;
+  --filter-active-text: #fff;
+  --search-border: #ddd;
+  --badge-bg: #f8f9fa;
+  --badge-text: #555;
+  --price-discount: #e74c3c;
+  --price-normal: #2e7d32;
+  --shadow-light: rgba(0,0,0,0.08);
+  --shadow-hover: rgba(0,0,0,0.15);
+  --green-tint: rgba(46,125,50,0.1);
+  --footer-bg: #2e7d32;
+  --footer-text: #fff;
+}
+
+body.dark {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #333;
+  --header-bg: #1b5e20;
+  --header-text: #fff;
+  --filter-bg: #2a2a2a;
+  --filter-text: #b0b0b0;
+  --filter-active-bg: #2e7d32;
+  --filter-active-text: #fff;
+  --search-border: #555;
+  --badge-bg: #2a2a2a;
+  --badge-text: #b0b0b0;
+  --price-discount: #ff6b6b;
+  --price-normal: #4caf50;
+  --shadow-light: rgba(0,0,0,0.3);
+  --shadow-hover: rgba(0,0,0,0.5);
+  --green-tint: rgba(46,125,50,0.2);
+  --footer-bg: #1b5e20;
+  --footer-text: #e0e0e0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Header Section */
+.header-section {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Theme and Cart Buttons */
+#themeToggle, #cartButton {
+  background: none;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+#themeToggle:hover, #cartButton:hover {
+  transform: scale(1.1);
+}
+
+#cartButton {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--price-discount);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Filters and Search Container */
+.filters-search-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.filters button {
+  padding: 8px 16px;
+  border-radius: 25px;
+  border: 1px solid var(--text-color);
+  cursor: pointer;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filters button:hover {
+  background: var(--green-tint);
+  transform: translateY(-2px);
+}
+
+.filters button.active {
+  background: var(--filter-active-bg);
+  color: var(--filter-active-text);
+  transform: scale(1.05);
+}
+
+/* Search and Price Range Container */
+.search-price-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Search */
+.header-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#searchInput {
+  padding: 4px 2px 4px 14px;
+  border-radius: 25px;
+  border: 2px solid var(--search-border);
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  width: 180px;
+  height: 30px;
+}
+
+#searchInput:focus {
+  border-color: var(--filter-active-bg);
+  outline: none;
+}
+
+#searchInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+#searchButton {
+  padding: 8px 16px;
+  border-radius: 25px;
+  border: 2px solid var(--search-border);
+  background: var(--header-bg);
+  color: var(--header-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#searchButton:hover {
+  background: #1b5e20;
+  transform: translateY(-2px);
+}
+
+/* Mini Square Price Range */
+.price-range {
+  width: 150px;
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 3px 8px var(--shadow-light);
+  border: 1px solid var(--filter-active-bg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.price-range:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px var(--shadow-hover);
+}
+
+.price-range label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--price-normal);
+}
+
+.price-range input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 12px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.price-range input:focus {
+  border-color: var(--filter-active-bg);
+  outline: none;
+}
+
+.reset-price {
+  margin-top: 6px;
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  background: var(--header-bg);
+  color: var(--header-text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.reset-price:hover {
+  background: #1b5e20;
+  transform: translateY(-2px);
+}
+
+/* Products Grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 20px 0;
+}
+
+/* Product Card */
+.product {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+  width: 250px;
+}
+
+.product:nth-child(1) { animation-delay: 0.1s; }
+.product:nth-child(2) { animation-delay: 0.2s; }
+.product:nth-child(3) { animation-delay: 0.3s; }
+.product:nth-child(4) { animation-delay: 0.4s; }
+.product:nth-child(5) { animation-delay: 0.5s; }
+.product:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.product:hover {
+  transform: translateY(-8px) rotate(0.5deg);
+  box-shadow: 0 12px 30px var(--shadow-hover);
+  background: var(--green-tint);
+}
+
+.product.liked { border-left: 4px solid #2e7d32; }
+
+/* Product Image */
+.product img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product:hover img {
+  transform: scale(1.05);
+  animation: wiggle 1s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: scale(1.05) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(1deg); }
+  75% { transform: scale(1.05) rotate(-1deg); }
+}
+
+/* Product Details */
+.product-details {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.product-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--price-normal);
+  margin: 0 0 8px;
+}
+
+.product:hover .product-name { color: var(--header-bg); }
+
+.product-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  align-items: center;
+}
+
+.status-badge {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-weight: 500;
+  font-size: 12px;
+  box-shadow: 0 2px 6px var(--shadow-light);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-badge:hover {
+  transform: translateY(-2px);
+  background: var(--green-tint);
+  color: var(--header-bg);
+}
+
+.status-badge::after {
+  content: '✓';
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.out-of-stock::after { content: '✕'; color: #f44336; }
+.weight::after { content: '⚖️'; }
+.discount::after { content: '💰'; }
+
+.price-container {
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: var(--badge-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 5px;
+  box-shadow: 0 2px 6px var(--shadow-light);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.price-container:hover {
+  transform: translateY(-2px);
+  background: #fff3e0;
+}
+
+.original-price {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.discounted-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--price-discount);
+}
+
+.no-discount .discounted-price {
+  color: var(--price-normal);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-top: 1px solid var(--border-color);
+  gap: 10px;
+}
+
+.actions button {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--card-bg);
+  color: var(--text-color);
+  flex: 1;
+}
+
+.actions button:disabled {
+  background: var(--border-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.actions button.add {
+  background: var(--header-bg);
+  color: var(--header-text);
+  border-color: var(--header-bg);
+}
+
+.actions button.add:hover:not(:disabled) {
+  background: #1b5e20;
+  transform: translateY(-2px);
+}
+
+.actions button.quick-view {
+  background: var(--badge-bg);
+  color: var(--price-normal);
+  font-size: 13px;
+}
+
+.actions button.quick-view:hover {
+  background: var(--green-tint);
+  transform: translateY(-2px);
+}
+
+.actions button.like {
+  background: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  border: none;
+  flex: none;
+  padding: 5px;
+}
+
+.actions button.like:hover {
+  transform: rotate(15deg) scale(1.2);
+  color: #e74c3c;
+}
+
+.like.liked {
+  color: #e74c3c;
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* Product View */
+.product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-image img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.product-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-control button {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--header-bg);
+  color: var(--header-text);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.quantity-control button:disabled {
+  background: var(--border-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.quantity-control input {
+  width: 50px;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Cart View */
+.cart-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cart-item {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.cart-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-details {
+  flex: 1;
+}
+
+.cart-details h3 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  color: var(--price-normal);
+}
+
+.cart-details p {
+  margin: 5px 0;
+  color: var(--text-secondary);
+}
+
+.cart-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cart-actions button {
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cart-actions .remove {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.cart-actions .remove:hover {
+  background: var(--price-discount);
+  color: #fff;
+}
+
+.total {
+  text-align: right;
+  margin: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Checkout View */
+.checkout-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.checkout-container h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.checkout-container label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.checkout-container input,
+.checkout-container textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.checkout-container input:focus,
+.checkout-container textarea:focus {
+  border-color: var(--filter-active-bg);
+  outline: none;
+}
+
+.checkout-items {
+  margin-bottom: 20px;
+}
+
+.checkout-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Footer */
+footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 40px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px var(--shadow-light);
+  margin-top: 40px;
+}
+
+footer div {
+  flex: 1;
+  min-width: 200px;
+}
+
+footer h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+footer p {
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+footer a {
+  color: var(--footer-text);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .filters-search-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-price-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .filters {
+    justify-content: center;
+  }
+  footer {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .product-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .product-image img {
+    max-width: 100%;
+  }
+}
+
+/* Notification Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+<body>
+<div class="main-content">
+  <div class="header-section">
+    <div class="filters-search-container">
+      <div class="filters">
+        <button onclick="filterProducts('all', this)">All</button>
+        <button onclick="filterProducts('vegetable', this)">Vegetables</button>
+        <button onclick="filterProducts('fruit', this)">Fruits</button>
+        <button onclick="filterProducts('meat', this)">Meat</button>
+        <button onclick="filterProducts('favorites', this)">Favorites</button>
+      </div>
+      <div class="search-price-container">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Search products...">
+          <button id="searchButton">Search</button>
+        </div>
+        <div class="price-range">
+          <label for="minPrice">Min Price (LKR)</label>
+          <input type="number" id="minPrice" placeholder="0" min="0">
+          <label for="maxPrice">Max Price (LKR)</label>
+          <input type="number" id="maxPrice" placeholder="Max" min="0">
+          <button class="reset-price" onclick="resetPriceRange()">Reset Price Range</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button id="cartButton" onclick="window.location.href='addtocart.html'" title="View Cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <button id="themeToggle" title="Toggle Theme">🌙</button>
+    </div>
+  </div>
+  <div id="dynamic-content"></div>
+  <footer>
+    <div>
+      <h4>Organo</h4>
+      <p>Premium organic vegetables and country meat delivered fresh to your door.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <p><a href="index.html">Home</a></p>
+      <p><a href="products.html">Products</a></p>
+      <p><a href="about.html">About Us</a></p>
+      <p><a href="contact.html">Contact</a></p>
+    </div>
+    <div>
+      <h4>Customer Service</h4>
+      <p><a href="#shipping">Shipping Info</a></p>
+      <p><a href="#returns">Returns</a></p>
+      <p><a href="#faq">FAQ</a></p>
+      <p><a href="#privacy">Privacy Policy</a></p>
+    </div>
+    <div>
+      <h4>Get in Touch</h4>
+      <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
+      <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
+      <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+const products = [
+  {id:1,name:"Tomato",category:"vegetable",price:500.00,weight:"1kg",stock:10,off:10,desc:"Fresh ripe tomatoes sourced from local farms.",image:"images/tomato.jpg",color:"#e74c3c"},
+  {id:2,name:"Potato",category:"vegetable",price:350.00,weight:"1kg",stock:0,off:0,desc:"Golden potatoes suitable for mashing, roasting, or frying.",image:"images/potato.jpg",color:"#d4a373"},
+  {id:3,name:"Carrot",category:"vegetable",price:400.00,weight:"1kg",stock:12,off:5,desc:"Crisp orange carrots packed with vitamins.",image:"images/carrot.jpg",color:"#e67e22"},
+  {id:4,name:"Onion",category:"vegetable",price:300.00,weight:"1kg",stock:15,off:0,desc:"Red onions with sharp flavor.",image:"images/onion.jpg",color:"#8b4513"},
+  {id:5,name:"Garlic",category:"vegetable",price:250.00,weight:"500g",stock:20,off:5,desc:"Fresh garlic bulbs for seasoning.",image:"images/garlic.jpg",color:"#f5f5dc"},
+  {id:6,name:"Spinach",category:"vegetable",price:200.00,weight:"500g",stock:8,off:10,desc:"Nutritious spinach leaves.",image:"images/spinach.jpg",color:"#228b22"},
+  {id:7,name:"Broccoli",category:"vegetable",price:450.00,weight:"1kg",stock:14,off:0,desc:"Vibrant broccoli florets.",image:"images/broccoli.jpg",color:"#32cd32"},
+  {id:8,name:"Cabbage",category:"vegetable",price:280.00,weight:"1kg",stock:18,off:5,desc:"Crisp green cabbage.",image:"images/cabbage.jpg",color:"#90ee90"},
+  {id:9,name:"Lettuce",category:"vegetable",price:150.00,weight:"1kg",stock:16,off:0,desc:"Fresh romaine lettuce.",image:"images/lettuce.jpg",color:"#adff2f"},
+  {id:10,name:"Cucumber",category:"vegetable",price:220.00,weight:"1kg",stock:11,off:10,desc:"Cool cucumbers.",image:"images/cucumber.jpg",color:"#90ee90"},
+  {id:11,name:"Bell Pepper",category:"vegetable",price:380.00,weight:"500g",stock:9,off:5,desc:"Colorful bell peppers.",image:"images/bellpepper.jpg",color:"#ff4500"},
+  {id:12,name:"Zucchini",category:"vegetable",price:320.00,weight:"1kg",stock:13,off:0,desc:"Tender zucchini.",image:"images/zucchini.jpg",color:"#9acd32"},
+  {id:13,name:"Eggplant",category:"vegetable",price:290.00,weight:"1kg",stock:7,off:15,desc:"Glossy eggplants.",image:"images/eggplant.jpg",color:"#4b0082"},
+  {id:14,name:"Cauliflower",category:"vegetable",price:410.00,weight:"1kg",stock:17,off:5,desc:"White cauliflower heads.",image:"images/cauliflower.jpg",color:"#fff8dc"},
+  {id:15,name:"Green Beans",category:"vegetable",price:260.00,weight:"500g",stock:19,off:0,desc:"Crisp green beans.",image:"images/greenbeans.jpg",color:"#228b22"},
+  {id:16,name:"Peas",category:"vegetable",price:180.00,weight:"500g",stock:12,off:10,desc:"Sweet peas.",image:"images/peas.jpg",color:"#32cd32"},
+  {id:17,name:"Radish",category:"vegetable",price:120.00,weight:"500g",stock:15,off:0,desc:"Spicy radishes.",image:"images/radish.jpg",color:"#ff1493"},
+  {id:18,name:"Beetroot",category:"vegetable",price:340.00,weight:"1kg",stock:6,off:5,desc:"Earthy beetroots.",image:"images/beetroot.jpg",color:"#8b0000"},
+  {id:19,name:"Kale",category:"vegetable",price:230.00,weight:"500g",stock:10,off:10,desc:"Robust kale leaves.",image:"images/kale.jpg",color:"#006400"},
+  {id:20,name:"Asparagus",category:"vegetable",price:550.00,weight:"500g",stock:5,off:0,desc:"Tender asparagus spears.",image:"images/asparagus.jpg",color:"#7cfc00"},
+  {id:21,name:"Apple",category:"fruit",price:800.00,weight:"1kg",stock:15,off:5,desc:"Crisp red apples.",image:"images/apple.jpg",color:"#e74c3c"},
+  {id:22,name:"Mango",category:"fruit",price:1200.00,weight:"1kg",stock:8,off:10,desc:"Sweet, juicy mangoes.",image:"images/mango.jpg",color:"#f1c40f"},
+  {id:23,name:"Banana",category:"fruit",price:250.00,weight:"1kg",stock:20,off:0,desc:"Ripe bananas.",image:"images/banana.jpg",color:"#ffd700"},
+  {id:24,name:"Orange",category:"fruit",price:450.00,weight:"1kg",stock:14,off:5,desc:"Juicy oranges.",image:"images/orange.jpg",color:"#ffa500"},
+  {id:25,name:"Strawberry",category:"fruit",price:650.00,weight:"500g",stock:12,off:10,desc:"Fresh strawberries.",image:"images/strawberry.jpg",color:"#ff69b4"},
+  {id:26,name:"Blueberry",category:"fruit",price:900.00,weight:"500g",stock:9,off:0,desc:"Antioxidant-rich blueberries.",image:"images/blueberry.jpg",color:"#4682b4"},
+  {id:27,name:"Pineapple",category:"fruit",price:700.00,weight:"1kg",stock:11,off:15,desc:"Tropical pineapples.",image:"images/pineapple.jpg",color:"#ffd700"},
+  {id:28,name:"Grapes",category:"fruit",price:550.00,weight:"500g",stock:16,off:5,desc:"Seedless grapes.",image:"images/grapes.jpg",color:"#8b0000"},
+  {id:29,name:"Kiwi",category:"fruit",price:400.00,weight:"500g",stock:13,off:0,desc:"Fuzzy kiwis.",image:"images/kiwi.jpg",color:"#7cfc00"},
+  {id:30,name:"Lemon",category:"fruit",price:200.00,weight:"1kg",stock:18,off:10,desc:"Zesty lemons.",image:"images/lemon.jpg",color:"#fffacd"},
+  {id:31,name:"Lime",category:"fruit",price:220.00,weight:"500g",stock:17,off:0,desc:"Tangy limes.",image:"images/lime.jpg",color:"#90ee90"},
+  {id:32,name:"Watermelon",category:"fruit",price:350.00,weight:"1kg",stock:10,off:5,desc:"Refreshing watermelon.",image:"images/watermelon.jpg",color:"#ff4500"},
+  {id:33,name:"Cantaloupe",category:"fruit",price:480.00,weight:"1kg",stock:7,off:10,desc:"Sweet cantaloupe.",image:"images/cantaloupe.jpg",color:"#ffdab9"},
+  {id:34,name:"Peach",category:"fruit",price:600.00,weight:"1kg",stock:14,off:0,desc:"Juicy peaches.",image:"images/peach.jpg",color:"#ffc0cb"},
+  {id:35,name:"Plum",category:"fruit",price:380.00,weight:"1kg",stock:15,off:5,desc:"Plump plums.",image:"images/plum.jpg",color:"#dda0dd"},
+  {id:36,name:"Cherry",category:"fruit",price:750.00,weight:"500g",stock:6,off:15,desc:"Bing cherries.",image:"images/cherry.jpg",color:"#dc143c"},
+  {id:37,name:"Pear",category:"fruit",price:420.00,weight:"1kg",stock:12,off:0,desc:"Bosc pears.",image:"images/pear.jpg",color:"#f0e68c"},
+  {id:38,name:"Papaya",category:"fruit",price:500.00,weight:"1kg",stock:9,off:10,desc:"Tropical papaya.",image:"images/papaya.jpg",color:"#ff1493"},
+  {id:39,name:"Pomegranate",category:"fruit",price:680.00,weight:"500g",stock:8,off:5,desc:"Ruby pomegranate seeds.",image:"images/pomegranate.jpg",color:"#b22222"},
+  {id:40,name:"Avocado",category:"fruit",price:850.00,weight:"1kg",stock:11,off:0,desc:"Creamy avocados.",image:"images/avocado.jpg",color:"#90ee90"},
+  {id:41,name:"Chicken Breast",category:"meat",price:1500.00,weight:"500g",stock:12,off:15,desc:"Premium free-range chicken breast.",image:"images/chicken.jpg",color:"#f1948a"},
+  {id:42,name:"Beef Steak",category:"meat",price:2500.00,weight:"500g",stock:8,off:10,desc:"Grass-fed beef steak.",image:"images/beefsteak.jpg",color:"#8b0000"},
+  {id:43,name:"Pork Chop",category:"meat",price:1200.00,weight:"500g",stock:10,off:0,desc:"Juicy pork chops.",image:"images/porkchop.jpg",color:"#d2691e"},
+  {id:44,name:"Lamb Leg",category:"meat",price:3000.00,weight:"1kg",stock:6,off:5,desc:"Tender lamb leg.",image:"images/lambleg.jpg",color:"#f5deb3"},
+  {id:45,name:"Turkey Breast",category:"meat",price:1800.00,weight:"500g",stock:14,off:10,desc:"Lean turkey breast.",image:"images/turkeybreast.jpg",color:"#ffdab9"},
+  {id:46,name:"Salmon Fillet",category:"meat",price:2200.00,weight:"500g",stock:9,off:0,desc:"Wild-caught salmon fillet.",image:"images/salmon.jpg",color:"#ff6b35"},
+  {id:47,name:"Tuna Steak",category:"meat",price:2000.00,weight:"500g",stock:7,off:15,desc:"Fresh tuna steaks.",image:"images/tunasteak.jpg",color:"#4682b4"},
+  {id:48,name:"Ground Beef",category:"meat",price:900.00,weight:"1kg",stock:16,off:5,desc:"Lean ground beef.",image:"images/groundbeef.jpg",color:"#8b4513"},
+  {id:49,name:"Sausage",category:"meat",price:750.00,weight:"500g",stock:11,off:0,desc:"Spicy sausages.",image:"images/sausage.jpg",color:"#cd853f"},
+  {id:50,name:"Bacon",category:"meat",price:650.00,weight:"500g",stock:13,off:10,desc:"Crispy bacon strips.",image:"images/bacon.jpg",color:"#f4a460"},
+  {id:51,name:"Ribs",category:"meat",price:2800.00,weight:"1kg",stock:5,off:5,desc:"Slow-cooked ribs.",image:"images/ribs.jpg",color:"#a0522d"},
+  {id:52,name:"Shrimp",category:"meat",price:1600.00,weight:"500g",stock:10,off:0,desc:"Peeled shrimp.",image:"images/shrimp.jpg",color:"#20b2aa"},
+  {id:53,name:"Cod",category:"meat",price:1900.00,weight:"500g",stock:12,off:10,desc:"Flaky cod fillets.",image:"images/cod.jpg",color:"#add8e6"},
+  {id:54,name:"Chicken Thighs",category:"meat",price:1100.00,weight:"1kg",stock:15,off:5,desc:"Juicy chicken thighs.",image:"images/chickenthighs.jpg",color:"#f1948a"},
+  {id:55,name:"Duck Breast",category:"meat",price:3200.00,weight:"500g",stock:4,off:15,desc:"Rich duck breast.",image:"images/duckbreast.jpg",color:"#daa520"},
+  {id:56,name:"Ground Pork",category:"meat",price:850.00,weight:"1kg",stock:14,off:0,desc:"Fresh ground pork.",image:"images/groundpork.jpg",color:"#d2691e"},
+  {id:57,name:"Sirloin Steak",category:"meat",price:2800.00,weight:"500g",stock:9,off:5,desc:"Tender sirloin steak.",image:"images/sirloin.jpg",color:"#8b0000"},
+  {id:58,name:"Pork Belly",category:"meat",price:1400.00,weight:"1kg",stock:7,off:10,desc:"Crispy pork belly.",image:"images/porkbelly.jpg",color:"#cd853f"},
+  {id:59,name:"Lamb Chops",category:"meat",price:2600.00,weight:"500g",stock:8,off:0,desc:"Marbled lamb chops.",image:"images/lambchops.jpg",color:"#f5deb3"},
+  {id:60,name:"Scallops",category:"meat",price:3500.00,weight:"500g",stock:6,off:15,desc:"Plump sea scallops.",image:"images/scallops.jpg",color:"#f0e68c"},
+];
+
+let activeFilterBtn = null;
+let likedProducts = JSON.parse(localStorage.getItem('likedProducts') || '[]');
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+let activeFilter = 'all';
+let currentPage = 1;
+const productsPerPage = 15;
+let currentView = 'home';
+
+function saveLikes() {
+  localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
+}
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function toggleLike(productId, btn) {
+  const index = likedProducts.indexOf(productId);
+  if (index > -1) {
+    likedProducts.splice(index, 1);
+    btn.classList.remove('liked');
+  } else {
+    likedProducts.push(productId);
+    btn.classList.add('liked');
+  }
+  saveLikes();
+  if (activeFilter === 'favorites' && currentView === 'home') {
+    displayProducts('favorites');
+  }
+}
+
+function getPriceDisplay(p) {
+  const discountedPrice = p.off > 0 ? Math.round(p.price * (1 - p.off / 100)) : p.price;
+  return p.off > 0 ? `
+    <div class="price-container">
+      <span class="original-price">LKR ${p.price.toFixed(2)}</span>
+      <span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span>
+    </div>
+  ` : `<div class="price-container no-discount"><span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span></div>`;
+}
+
+function displayProducts(filter = 'all', query = '', minPrice = 0, maxPrice = Infinity, page = 1) {
+  activeFilter = filter;
+  currentPage = page;
+  const list = document.getElementById("dynamic-content");
+  list.innerHTML = '<div class="products" id="product-list"></div>';
+  let filtered = filter === 'favorites' ? products.filter(p => likedProducts.includes(p.id)) : 
+                 filter === 'all' ? products : products.filter(p => p.category === filter);
+  filtered = filtered.filter(p => {
+    const matchesQuery = p.name.toLowerCase().includes(query.toLowerCase());
+    const discountedPrice = p.off > 0 ? Math.round(p.price * (1 - p.off / 100)) : p.price;
+    return matchesQuery && discountedPrice >= minPrice && discountedPrice <= maxPrice;
+  });
+
+  const start = (page - 1) * productsPerPage;
+  const end = start + productsPerPage;
+  const paginatedProducts = filtered.slice(start, end);
+
+  const productList = document.getElementById("product-list");
+  if (paginatedProducts.length === 0) {
+    productList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No products found.</p>';
+    return;
+  }
+
+  paginatedProducts.forEach((p, index) => {
+    const div = document.createElement('div');
+    div.className = `product ${likedProducts.includes(p.id) ? 'liked' : ''}`;
+    div.style.animationDelay = `${0.1 + index * 0.1}s`;
+    const discountHtml = p.off > 0 ? `<span class="status-badge discount">${p.off}% Off</span>` : '';
+    const stockClass = p.stock > 0 ? '' : 'out-of-stock';
+    const stockHtml = `<span class="status-badge ${stockClass}">${p.stock > 0 ? 'In Stock' : 'Out of Stock'}</span>`;
+    const priceHtml = getPriceDisplay(p);
+    const isLiked = likedProducts.includes(p.id);
+
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/250x180?text=${p.name}'">
+      <div class="product-details">
+        <h3 class="product-name">${p.name}</h3>
+        <div class="product-meta">
+          ${stockHtml}
+          <span class="status-badge weight">${p.weight}</span>
+          ${discountHtml}
+          ${priceHtml}
+        </div>
+      </div>
+      <div class="actions">
+        <button class="add" ${p.stock === 0 ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart(${p.id}, 1)">Add to Cart</button>
+        <button class="quick-view" onclick="event.stopPropagation(); showQuickView(${p.id})">Quick View</button>
+        <button class="like ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike(${p.id}, this)">${isLiked ? '♥' : '♡'}</button>
+      </div>
+    `;
+    productList.appendChild(div);
+  });
+}
+
+function changePage(page) {
+  displayProducts(
+    activeFilter,
+    document.getElementById('searchInput').value,
+    parseFloat(document.getElementById('minPrice').value) || 0,
+    parseFloat(document.getElementById('maxPrice').value) || Infinity,
+    page
+  );
+}
+
+function filterProducts(category, btn) {
+  showView('home');
+  displayProducts(category, document.getElementById('searchInput').value, 
+    parseFloat(document.getElementById('minPrice').value) || 0,
+    parseFloat(document.getElementById('maxPrice').value) || Infinity,
+    1
+  );
+  if (activeFilterBtn) activeFilterBtn.classList.remove('active');
+  btn.classList.add('active');
+  activeFilterBtn = btn;
+}
+
+function addToCart(productId, qty = 1) {
+  const product = products.find(p => p.id === productId);
+  if (product.stock === 0) return;
+  const cartItem = cart.find(item => item.id === productId);
+  if (cartItem) {
+    cartItem.qty += qty;
+  } else {
+    cart.push({ id: productId, qty });
+  }
+  saveCart();
+  
+  // Show success notification
+  showNotification(`Added ${qty} ${product.name} to cart!`, 'success');
+  
+  // Update cart count in header if it exists
+  updateCartCount();
+}
+
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: ${type === 'success' ? '#4caf50' : '#2196f3'};
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+function updateCartCount() {
+  const cartCountElement = document.getElementById('cart-count');
+  if (cartCountElement) {
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    cartCountElement.textContent = totalItems;
+    cartCountElement.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+}
+
+function showQuickView(productId) {
+  currentView = 'product';
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const discountedPrice = product.off > 0 ? Math.round(product.price * (1 - product.off / 100)) : product.price;
+  const priceHtml = product.off > 0 ? `
+    <div class="price-container">
+      <span class="original-price">LKR ${product.price.toFixed(2)}</span>
+      <span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span>
+    </div>
+  ` : `<div class="price-container no-discount"><span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span></div>`;
+  const stockClass = product.stock > 0 ? '' : 'out-of-stock';
+  const stockHtml = `<span class="status-badge ${stockClass}">${product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span>`;
+  const discountHtml = product.off > 0 ? `<span class="status-badge discount">${product.off}% Off</span>` : '';
+
+  document.getElementById('dynamic-content').innerHTML = `
+    <div class="product-container">
+      <div class="product-image">
+        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x200?text=${product.name}'">
+      </div>
+      <div class="product-details">
+        <h2 class="product-name">${product.name}</h2>
+        <p class="product-desc">${product.desc}</p>
+        <div class="product-meta">
+          ${stockHtml}
+          <span class="status-badge weight">${product.weight}</span>
+          ${discountHtml}
+          ${priceHtml}
+        </div>
+        <div class="quantity-control">
+          <button onclick="adjustQuantity(${productId}, -1)">-</button>
+          <input type="number" id="quantity-${productId}" value="1" min="1" max="${product.stock}">
+          <button onclick="adjustQuantity(${productId}, 1)" ${product.stock === 0 ? 'disabled' : ''}>+</button>
+        </div>
+        <div class="actions">
+          <button class="add" ${product.stock === 0 ? 'disabled' : ''} onclick="addToCart(${productId}, parseInt(document.getElementById('quantity-${productId}').value))">Add to Cart</button>
+          <button class="back" onclick="showView('home')">Back</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('searchInput').style.display = 'none';
+  document.getElementById('searchButton').style.display = 'none';
+  document.querySelector('.filters').style.display = 'none';
+  document.querySelector('.price-range').style.display = 'none';
+}
+
+function adjustQuantity(productId, delta) {
+  const input = document.getElementById(`quantity-${productId}`);
+  const product = products.find(p => p.id === productId);
+  let qty = parseInt(input.value) + delta;
+  if (qty < 1) qty = 1;
+  if (qty > product.stock) qty = product.stock;
+  input.value = qty;
+}
+
+function showCart() {
+  currentView = 'cart';
+  const container = document.getElementById('dynamic-content');
+  container.innerHTML = '<div class="cart-container" id="cart-container"></div><div class="total" id="total"></div><div class="actions"><button class="back" onclick="showView(\'home\')">Continue Shopping</button><button class="checkout" onclick="showCheckout()">Checkout</button></div>';
+  
+  const cartContainer = document.getElementById('cart-container');
+  let total = 0;
+  if (cart.length === 0) {
+    cartContainer.innerHTML = '<p style="text-align: center;">Your cart is empty.</p>';
+  } else {
+    cart.forEach(item => {
+      const product = products.find(p => p.id === item.id);
+      if (!product) return;
+      const discountedPrice = product.off > 0 ? Math.round(product.price * (1 - product.off / 100)) : product.price;
+      const itemTotal = discountedPrice * item.qty;
+      total += itemTotal;
+      cartContainer.innerHTML += `
+        <div class="cart-item">
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/100x100?text=${product.name}'">
+          <div class="cart-details">
+            <h3>${product.name}</h3>
+            <p>Price: LKR ${discountedPrice.toFixed(2)}</p>
+            <p>Quantity: ${item.qty}</p>
+            <p>Total: LKR ${itemTotal.toFixed(2)}</p>
+          </div>
+          <div class="cart-actions">
+            <button class="remove" onclick="removeFromCart(${item.id})">Remove</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  document.getElementById('total').textContent = `Total: LKR ${total.toFixed(2)}`;
+  document.getElementById('searchInput').style.display = 'none';
+  document.getElementById('searchButton').style.display = 'none';
+  document.querySelector('.filters').style.display = 'none';
+  document.querySelector('.price-range').style.display = 'none';
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  saveCart();
+  showCart();
+}
+
+function showCheckout() {
+  if (cart.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+  currentView = 'checkout';
+  let total = 0;
+  let itemsHtml = '';
+  cart.forEach(item => {
+    const product = products.find(p => p.id === item.id);
+    if (!product) return;
+    const discountedPrice = product.off > 0 ? Math.round(product.price * (1 - product.off / 100)) : product.price;
+    const itemTotal = discountedPrice * item.qty;
+    total += itemTotal;
+    itemsHtml += `
+      <div class="checkout-item">
+        <span>${product.name} (${item.qty} x LKR ${discountedPrice.toFixed(2)})</span>
+        <span>LKR ${itemTotal.toFixed(2)}</span>
+      </div>
+    `;
+  });
+  document.getElementById('dynamic-content').innerHTML = `
+    <div class="checkout-container">
+      <h2>Checkout</h2>
+      <div class="checkout-items">${itemsHtml}</div>
+      <div class="total">Total: LKR ${total.toFixed(2)}</div>
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Enter your name" required>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <label for="address">Address</label>
+      <textarea id="address" placeholder="Enter your address" required></textarea>
+      <div class="actions">
+        <button class="back" onclick="showView('cart')">Back to Cart</button>
+        <button class="checkout" onclick="generateReceipt()">Confirm Order</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('searchInput').style.display = 'none';
+  document.getElementById('searchButton').style.display = 'none';
+  document.querySelector('.filters').style.display = 'none';
+  document.querySelector('.price-range').style.display = 'none';
+}
+
+function generateReceipt() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const address = document.getElementById('address').value;
+  if (!name || !email || !address) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  let total = 0;
+  let itemsLatex = '';
+  cart.forEach(item => {
+    const product = products.find(p => p.id === item.id);
+    if (!product) return;
+    const discountedPrice = product.off > 0 ? Math.round(product.price * (1 - product.off / 100)) : product.price;
+    const itemTotal = discountedPrice * item.qty;
+    total += itemTotal;
+    itemsLatex += `${product.name} & ${item.qty} & LKR ${discountedPrice.toFixed(2)} & LKR ${itemTotal.toFixed(2)} \\\\ \\hline\n`;
+  });
+
+  const latexContent = `
+\\documentclass{article}
+\\usepackage{geometry}
+\\geometry{a4paper, margin=1in}
+\\usepackage{booktabs}
+\\usepackage{pdflscape}
+\\usepackage{times}
+\\begin{document}
+\\begin{center}
+{\\LARGE \\textbf{Organo Receipt}} \\\\[0.5cm]
+{\\large No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka} \\\\
+{\\large Phone: +94 74 976 8651 \\quad Email: organo@gmail.com} \\\\[0.3cm]
+\\today
+\\end{center}
+
+\\vspace{0.5cm}
+
+\\textbf{Customer Details} \\\\
+Name: ${name.replace(/&/g, '\\&')} \\\\
+Email: ${email.replace(/&/g, '\\&')} \\\\
+Address: ${address.replace(/&/g, '\\&')} \\\\
+
+\\vspace{0.5cm}
+
+\\begin{landscape}
+\\begin{tabular}{l c r r}
+\\toprule
+\\textbf{Item} & \\textbf{Quantity} & \\textbf{Unit Price} & \\textbf{Total} \\\\
+\\midrule
+${itemsLatex}
+\\bottomrule
+\\multicolumn{3}{r}{\\textbf{Total}} & \\textbf{LKR ${total.toFixed(2)}} \\\\
+\\end{tabular}
+\\end{landscape}
+
+\\vspace{0.5cm}
+
+Thank you for shopping with Organo! \\\\
+For any inquiries, contact us at organo@gmail.com or +94 74 976 8651.
+
+\\end{document}
+  `;
+
+  const blob = new Blob([latexContent], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Organo_Receipt.tex';
+  a.click();
+  window.URL.revokeObjectURL(url);
+
+  alert('Order confirmed! Receipt downloaded.');
+  cart = [];
+  saveCart();
+  showView('home');
+}
+
+function resetPriceRange() {
+  document.getElementById('minPrice').value = '';
+  document.getElementById('maxPrice').value = '';
+  displayProducts(activeFilter, document.getElementById('searchInput').value, 0, Infinity, 1);
+}
+
+function showView(view) {
+  currentView = view;
+  document.getElementById('searchInput').style.display = view === 'home' ? 'block' : 'none';
+  document.getElementById('searchButton').style.display = view === 'home' ? 'block' : 'none';
+  document.querySelector('.filters').style.display = view === 'home' ? 'flex' : 'none';
+  document.querySelector('.price-range').style.display = view === 'home' ? 'block' : 'none';
+  if (view === 'home') {
+    displayProducts(activeFilter, document.getElementById('searchInput').value, 
+      parseFloat(document.getElementById('minPrice').value) || 0,
+      parseFloat(document.getElementById('maxPrice').value) || Infinity,
+      currentPage
+    );
+  } else if (view === 'cart') {
+    showCart();
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  if (currentView === 'home') {
+    displayProducts(activeFilter, this.value, 
+      parseFloat(document.getElementById('minPrice').value) || 0,
+      parseFloat(document.getElementById('maxPrice').value) || Infinity,
+      1
+    );
+  }
+});
+
+document.getElementById('searchButton').addEventListener('click', function() {
+  if (currentView === 'home') {
+    displayProducts(activeFilter, document.getElementById('searchInput').value, 
+      parseFloat(document.getElementById('minPrice').value) || 0,
+      parseFloat(document.getElementById('maxPrice').value) || Infinity,
+      1
+    );
+  }
+});
+
+document.getElementById('minPrice').addEventListener('input', function() {
+  if (currentView === 'home') {
+    displayProducts(activeFilter, document.getElementById('searchInput').value, 
+      parseFloat(this.value) || 0,
+      parseFloat(document.getElementById('maxPrice').value) || Infinity,
+      1
+    );
+  }
+});
+
+document.getElementById('maxPrice').addEventListener('input', function() {
+  if (currentView === 'home') {
+    displayProducts(activeFilter, document.getElementById('searchInput').value, 
+      parseFloat(document.getElementById('minPrice').value) || 0,
+      parseFloat(this.value) || Infinity,
+      1
+    );
+  }
+});
+
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const isDark = localStorage.getItem('darkMode') === 'true';
+if (isDark) {
+  body.classList.add('dark');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const darkMode = body.classList.contains('dark');
+  localStorage.setItem('darkMode', darkMode);
+  themeToggle.textContent = darkMode ? '☀️' : '🌙';
+});
+
+showView('home');
+
+// Initialize cart count
+updateCartCount();
+</script>
+</body>
+</html>

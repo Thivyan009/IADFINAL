@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organo App - Navigation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-secondary: #555;
+            --border-color: #e0e0e0;
+            --header-bg: #2e7d32;
+            --header-text: #fff;
+            --shadow-light: rgba(0,0,0,0.08);
+            --shadow-hover: rgba(0,0,0,0.15);
+            --green-tint: rgba(46,125,50,0.1);
+            --primary-green: #2e7d32;
+        }
+
+        body.dark {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #333;
+            --header-bg: #1b5e20;
+            --header-text: #fff;
+            --shadow-light: rgba(0,0,0,0.3);
+            --shadow-hover: rgba(0,0,0,0.5);
+            --green-tint: rgba(46,125,50,0.2);
+            --primary-green: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--header-bg) 0%, #1b5e20 100%);
+            color: var(--header-text);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-hover);
+            background: var(--green-tint);
+        }
+
+        .app-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .app-card .features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .app-card .features li {
+            padding: 0.25rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .app-card .features li:before {
+            content: '✓';
+            color: var(--primary-green);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .status {
+            background: var(--green-tint);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .status h3 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .app-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">🌙</button>
+    
+    <div class="header">
+        <h1>🌱 Organo App</h1>
+        <p>Complete E-commerce Application for Organic Products</p>
+    </div>
+
+    <div class="container">
+        <div class="status">
+            <h3><i class="fas fa-check-circle"></i> Application Ready!</h3>
+            <p>Your complete e-commerce application is now integrated and ready to use. All components are connected and working together seamlessly.</p>
+        </div>
+
+        <div class="app-grid">
+            <a href="index.html" class="app-card">
+                <h3><i class="fas fa-home"></i> Home Page</h3>
+                <p>Beautiful landing page with hero slider, features showcase, and product categories.</p>
+                <ul class="features">
+                    <li>Responsive hero slider</li>
+                    <li>Feature highlights</li>
+                    <li>Statistics section</li>
+                    <li>Product categories preview</li>
+                    <li>Cart count integration</li>
+                </ul>
+            </a>
+
+            <a href="products.html" class="app-card">
+                <h3><i class="fas fa-shopping-bag"></i> Products Catalog</h3>
+                <p>Complete product catalog with filtering, search, and cart functionality.</p>
+                <ul class="features">
+                    <li>60+ organic products</li>
+                    <li>Advanced filtering system</li>
+                    <li>Price range search</li>
+                    <li>Add to cart with notifications</li>
+                    <li>Quick view functionality</li>
+                    <li>Favorites system</li>
+                </ul>
+            </a>
+
+            <a href="addtocart.html" class="app-card">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <p>Manage your cart items with quantity controls and proceed to checkout.</p>
+                <ul class="features">
+                    <li>Cart item management</li>
+                    <li>Quantity adjustments</li>
+                    <li>Price calculations</li>
+                    <li>Tax calculations</li>
+                    <li>Checkout integration</li>
+                </ul>
+            </a>
+
+            <a href="Checkout_01_Customer info.html" class="app-card">
+                <h3><i class="fas fa-user"></i> Checkout Flow</h3>
+                <p>Complete 3-step checkout process for a smooth shopping experience.</p>
+                <ul class="features">
+                    <li>Customer information form</li>
+                    <li>Delivery method selection</li>
+                    <li>Payment method options</li>
+                    <li>Order review and confirmation</li>
+                    <li>Progress tracking</li>
+                </ul>
+            </a>
+
+            <a href="Thankyou.html" class="app-card">
+                <h3><i class="fas fa-check-circle"></i> Order Confirmation</h3>
+                <p>Thank you page with order details and next steps information.</p>
+                <ul class="features">
+                    <li>Order summary display</li>
+                    <li>Customer information</li>
+                    <li>Delivery details</li>
+                    <li>Next steps guidance</li>
+                    <li>Continue shopping options</li>
+                </ul>
+            </a>
+
+            <div class="app-card">
+                <h3><i class="fas fa-cogs"></i> App Features</h3>
+                <p>Integrated features that work across all pages.</p>
+                <ul class="features">
+                    <li>Dark/Light theme toggle</li>
+                    <li>Responsive design</li>
+                    <li>Local storage integration</li>
+                    <li>Cart persistence</li>
+                    <li>Cross-page navigation</li>
+                    <li>Professional UI/UX</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        
+        if (isDark) {
+            body.classList.add('dark');
+            themeToggle.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const darkMode = body.classList.contains('dark');
+            localStorage.setItem('darkMode', darkMode);
+            themeToggle.textContent = darkMode ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Organo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+    --bg-color: #ffffff;
+    --card-bg: #fff;
+    --text-color: #333;
+    --text-secondary: #555;
+    --border-color: #e0e0e0;
+    --header-bg: #2e7d32;
+    --header-text: #fff;
+    --shadow-light: rgba(0,0,0,0.08);
+    --shadow-hover: rgba(0,0,0,0.15);
+    --green-tint: rgba(46,125,50,0.1);
+    --sidebar-bg: #f8f9fa;
+    --sidebar-text: #333;
+    --footer-bg: #2e7d32;
+    --footer-text: #fff;
+    --price-discount: #e74c3c;
+    --price-normal: #2e7d32;
+    --primary-green: #2e7d32;
+    --light-gray: #f7f7f7;
+}
+
+body.dark {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border-color: #333;
+    --header-bg: #1b5e20;
+    --header-text: #fff;
+    --shadow-light: rgba(0,0,0,0.3);
+    --shadow-hover: rgba(0,0,0,0.5);
+    --green-tint: rgba(46,125,50,0.2);
+    --sidebar-bg: #2a2a2a;
+    --sidebar-text: #e0e0e0;
+    --footer-bg: #1b5e20;
+    --footer-text: #e0e0e0;
+    --primary-green: #4caf50;
+    --light-gray: #2a2a2a;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+    display: flex;
+}
+
+/* removed conflicting standalone .btn-secondary styles; unified button styles below */
+
+/* --- Sidebar and Main Content --- */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -370px;
+    transition: left 0.3s ease;
+    padding: 30px 20px;
+    box-shadow: 2px 0 10px var(--shadow-light);
+    z-index: 1000;
+}
+.sidebar.active { left: 0; }
+.sidebar-toggle {
+    position: fixed; top: 30px; left: 5px; background: var(--header-bg); color: var(--header-text);
+    border: none; padding: 12px; border-radius: 8px; cursor: pointer; z-index: 1001;
+    font-size: 18px; transition: transform 0.3s ease;
+}
+.sidebar-toggle:hover { transform: scale(1.1); }
+.sidebar h2 {
+    font-family: 'Playfair Display', serif; font-size: 28px; margin: 0 0 30px;
+    text-align: center; color: var(--price-normal);
+}
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar ul li { margin: 15px 0; }
+.sidebar ul li a {
+    color: var(--sidebar-text); text-decoration: none; font-size: 16px; display: flex;
+    align-items: center; gap: 10px; padding: 12px; border-radius: 8px; transition: all 0.3s ease;
+}
+.sidebar ul li a:hover { background: var(--green-tint); transform: translateX(5px); }
+.sidebar ul li a i { font-size: 18px; }
+
+.main-content {
+    flex: 1; padding: 20px; margin-left: 30px; transition: margin-left 0.3s ease;
+}
+.main-content.shifted { margin-left: 300px; }
+
+/* --- HEADER & PROGRESS BAR --- */
+.checkout-header {
+    background: var(--header-bg); padding: 20px; border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light); text-align: center; margin-bottom: 30px;
+}
+.checkout-header h1 {
+    font-family: 'Playfair Display', serif; font-size: 36px; margin: 0 0 5px 0; color: var(--header-text);
+}
+.checkout-header p { font-size: 16px; color: var(--header-text); opacity: 0.9; margin: 0; }
+
+.checkout-progress {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;
+    position: relative; max-width: 800px; margin-left: auto; margin-right: auto;
+}
+.checkout-progress::before {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px;
+    background-color: var(--border-color); transform: translateY(-50%); z-index: -1;
+}
+.progress-step {
+    display: flex; align-items: center; gap: 8px; background-color: var(--bg-color); padding: 0 15px;
+}
+.step-number {
+    width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 500; border: 2px solid var(--border-color);
+    background-color: var(--card-bg); color: var(--text-secondary);
+}
+.progress-step.completed .step-number, .progress-step.active .step-number {
+    background-color: var(--primary-green); color: #fff; border-color: var(--primary-green);
+}
+.progress-step.completed .step-number::before {
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+}
+.step-name { font-weight: 500; color: var(--text-secondary); }
+.progress-step.active .step-name { color: var(--text-color); }
+
+/* --- MAIN LAYOUT & ORDER SUMMARY --- */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+.checkout-form { flex: 2; }
+.order-summary {
+    flex: 1; background-color: var(--light-gray); padding: 25px; border-radius: 8px;
+    position: sticky; top: 20px;
+}
+.order-summary h3 { font-size: 20px; margin: 0 0 20px 0; font-weight: 600; }
+.summary-item {
+    display: flex; align-items: center; gap: 15px; padding-bottom: 15px; margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+.summary-item img { width: 60px; height: 60px; border-radius: 8px; }
+.summary-item-details { flex: 1; }
+.summary-item-details h4 { margin: 0; font-weight: 500; }
+.summary-item-details p { margin: 5px 0 0 0; color: var(--text-secondary); }
+.summary-item-price { font-weight: 500; }
+.summary-calculation div {
+    display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-secondary);
+}
+.summary-calculation .total {
+    font-weight: 600; font-size: 18px; color: var(--text-color); margin-top: 10px;
+    padding-top: 10px; border-top: 1px solid var(--border-color);
+}
+.secure-checkout {
+    text-align: center; margin-top: 20px; font-size: 14px; color: var(--primary-green);
+}
+.secure-checkout i { margin-right: 5px; }
+
+/* --- REVIEW SECTION STYLES --- */
+.form-section {
+    background-color: var(--card-bg); padding: 25px; border-radius: 8px;
+    border: 1px solid var(--border-color); margin-bottom: 25px;
+}
+.form-section h3 {
+    font-size: 20px; margin: 0 0 20px 0; font-weight: 600;
+}
+.review-group { margin-bottom: 20px; }
+.review-group h4 {
+    font-size: 18px; margin: 0 0 10px 0; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+}
+.review-group h4 i { color: var(--primary-green); }
+.review-group p { margin: 5px 0; font-size: 15px; color: var(--text-secondary); }
+.review-group p strong { color: var(--text-color); } /* For emphasizing data like name/email */
+
+.checkout-actions {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 30px;
+}
+.btn {
+    padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px;
+    font-weight: 500; cursor: pointer; transition: all 0.3s ease;
+}
+.btn-primary { background-color: var(--primary-green); color: #fff; }
+.btn-primary:hover { background-color: #1b5e20; transform: translateY(-2px); }
+.btn-secondary { background-color: transparent; color: var(--text-secondary); text-decoration: none; }
+.btn-secondary:hover { color: var(--text-color); }
+
+#themeToggle {
+    background: none; border: 1px solid var(--header-text); color: var(--header-text);
+    padding: 8px 12px; border-radius: 50%; cursor: pointer; font-size: 18px;
+    position: absolute; top: 40px; right: 40px;
+}
+
+/* --- FOOTER --- */
+footer {
+    background: var(--footer-bg); color: var(--footer-text); padding: 40px 20px; display: flex;
+    flex-wrap: wrap; gap: 30px; justify-content: space-between; border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light); margin-top: 40px;
+}
+footer div { flex: 1; min-width: 200px; }
+footer h4 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; }
+footer p { margin: 10px 0; font-size: 14px; line-height: 1.6; }
+footer p:hover { color: var(--green-tint); cursor: pointer; }
+footer a { color: var(--footer-text); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 992px) {
+    .checkout-container { grid-template-columns: 1fr; }
+    .order-summary { position: static; width: 100%; box-sizing: border-box; }
+}
+@media (max-width: 768px) {
+    .sidebar { width: 220px; left: -220px; }
+    .main-content.shifted { margin-left: 0; }
+    .progress-step .step-name { display: none; }
+    .checkout-actions { flex-direction: column-reverse; gap: 15px; }
+    .btn { width: 100%; text-align: center; }
+    #themeToggle { top: 25px; right: 25px; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+<div class="sidebar">
+    <h2>Organo</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+        <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="addtocart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+        <li><a href="favorites.html"><i class="fas fa-heart"></i> Favorites</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="checkout-header">
+        <h1>Checkout</h1>
+        <p>Complete your order for fresh organic products</p>
+        <button id="themeToggle" title="Toggle Theme">🌙</button>
+    </div>
+
+    <div class="checkout-progress">
+        <div class="progress-step completed">
+            <div class="step-number"></div>
+            <div class="step-name">Customer Info</div>
+        </div>
+        <div class="progress-step completed">
+            <div class="step-number"></div>
+            <div class="step-name">Delivery & Payment</div>
+        </div>
+        <div class="progress-step active">
+            <div class="step-number">3</div>
+            <div class="step-name">Review</div>
+        </div>
+    </div>
+    
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <div class="form-section">
+                <h3><i class="fas fa-check-circle"></i> Review Your Order</h3>
+                
+                <div class="review-group" id="review-customer-info">
+    <h4>Customer Information</h4>
+    <!-- Customer info will be inserted here by JS -->
+</div>
+
+                <div class="review-group" id="review-delivery-info">
+    <h4>Delivery Information</h4>
+    <!-- Delivery info will be inserted here by JS -->
+</div>
+
+
+                <div class="review-group">
+                    <h4>Payment Method</h4>
+                    <p><i class="fas fa-money-bill-wave"></i> Cash on Delivery</p>
+                </div>
+            </div>
+
+            <div class="checkout-actions">
+                <a href="Checkout_02_Payment.html" class="btn btn-secondary">Back</a>
+                <a href="Thankyou.html" class="btn btn-primary">Place Order - LKR280</a>
+            </div>
+            </div>
+
+        <aside class="order-summary">
+    <h3>Order Summary</h3>
+    <div id="order-items"></div>
+    <div class="summary-calculation" id="summary-totals"></div>
+    <div class="secure-checkout">
+        <i class="fas fa-lock"></i> Secure SSL encrypted checkout
+    </div>
+</aside>
+    </div>
+
+    <footer>
+        <div>
+            <h4>Organo</h4>
+            <p>Premium organic vegetables and country meat delivered fresh to your door.</p>
+        </div>
+        <div>
+            <h4>Quick Links</h4>
+            <p><a href="#vegetables">Vegetables</a></p>
+            <p><a href="#meat">Country Meat</a></p>
+            <p><a href="#offers">Seasonal Offers</a></p>
+            <p><a href="about.html">About Us</a></p>
+        </div>
+        <div>
+            <h4>Customer Service</h4>
+            <p><a href="contact.html">Contact Us</a></p>
+            <p><a href="#shipping">Shipping Info</a></p>
+            <p><a href="#returns">Returns</a></p>
+            <p><a href="#faq">FAQ</a></p>
+        </div>
+        <div>
+            <h4>Get in Touch</h4>
+            <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
+            <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
+            <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+// Sidebar Toggle
+document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.toggle('active');
+    document.querySelector('.main-content').classList.toggle('shifted');
+});
+
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const isDark = localStorage.getItem('darkMode') === 'true';
+
+if (isDark) {
+    body.classList.add('dark');
+    themeToggle.textContent = '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    const darkMode = body.classList.contains('dark');
+    localStorage.setItem('darkMode', darkMode);
+    themeToggle.textContent = darkMode ? '☀️' : '🌙';
+    });
+// --- Dynamic Order Summary for Review Page ---
+const products = [
+    {id:1,name:"Tomato",price:500.00,weight:"1kg",off:10,image:"images/tomato.jpg"},
+    {id:3,name:"Carrot",price:400.00,weight:"1kg",off:5,image:"images/carrot.jpg"},
+    {id:4,name:"Onion",price:300.00,weight:"1kg",off:0,image:"images/onion.jpg"},
+    {id:5,name:"Garlic",price:250.00,weight:"500g",off:5,image:"images/garlic.jpg"}
+];
+
+let cart = JSON.parse(localStorage.getItem('cart') || JSON.stringify([
+    {"id":1,"qty":1},
+    {"id":3,"qty":2},
+    {"id":4,"qty":1},
+    {"id":5,"qty":1}
+]));
+
+function renderOrderSummary() {
+    const container = document.getElementById('order-items');
+    const totals = document.getElementById('summary-totals');
+    container.innerHTML = '';
+    totals.innerHTML = '';
+
+    let subtotal = 0;
+
+    cart.forEach(item => {
+        const p = products.find(prod => prod.id === item.id);
+        if (!p) return;
+        const discountedPrice = p.off > 0 ? Math.round(p.price * (1 - p.off/100)) : p.price;
+        const itemTotal = discountedPrice * item.qty;
+        subtotal += itemTotal;
+
+        const div = document.createElement('div');
+        div.className = 'summary-item';
+        div.innerHTML = `
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/60x60?text=${p.name}'">
+            <div class="summary-item-details">
+                <h4>${p.name}</h4>
+                <p>Qty: ${item.qty}</p>
+            </div>
+            <div class="summary-item-price">LKR ${itemTotal.toFixed(2)}</div>
+        `;
+        container.appendChild(div);
+    });
+
+    const delivery = 100; // fixed delivery cost
+    const total = subtotal + delivery;
+
+    totals.innerHTML = `
+        <div><span>Subtotal (${cart.length} items)</span><span>LKR ${subtotal.toFixed(2)}</span></div>
+        <div><span>Delivery</span><span>LKR ${delivery.toFixed(2)}</span></div>
+        <div class="total"><span>Total</span><span>LKR ${total.toFixed(2)}</span></div>
+    `;
+
+    // Update "Place Order" button total dynamically
+    const placeOrderBtn = document.querySelector('.btn-primary');
+    if (placeOrderBtn) {
+        placeOrderBtn.textContent = `Place Order - LKR ${total.toFixed(2)}`;
+    }
+}
+
+renderOrderSummary();
+// --- Populate Customer Info from localStorage ---
+const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
+
+const reviewCustomerDiv = document.getElementById('review-customer-info');
+
+if (customerInfo) {
+    reviewCustomerDiv.innerHTML += `
+        <p><strong>${customerInfo.firstName} ${customerInfo.lastName}</strong></p>
+        <p><strong>${customerInfo.email}</strong></p>
+        <p><strong>${customerInfo.phone}</strong></p>
+        <p>${customerInfo.streetAddress}, ${customerInfo.city}, ${customerInfo.state} - ${customerInfo.zipCode}</p>
+        <p>Notes: ${customerInfo.deliveryNotes || 'None'}</p>
+    `;
+}
+
+// --- Populate Delivery Info ---
+const reviewDeliveryDiv = document.getElementById('review-delivery-info');
+const deliveryMethod = localStorage.getItem('deliveryMethod') || 'home-delivery';
+const paymentMethod = localStorage.getItem('paymentMethod') || 'credit-card';
+
+const deliveryText = deliveryMethod === 'home-delivery' ? 'Home Delivery' : 'Store Pickup';
+const paymentText = paymentMethod === 'credit-card' ? 'Credit/Debit Card' : 'Cash on Delivery';
+
+reviewDeliveryDiv.innerHTML += `
+    <p><i class="fas fa-truck"></i> ${deliveryText}</p>
+`;
+
+// Update payment method display
+const paymentReviewDiv = document.querySelector('.review-group:last-child');
+if (paymentReviewDiv) {
+    const icon = paymentMethod === 'credit-card' ? 'fa-credit-card' : 'fa-money-bill-wave';
+    paymentReviewDiv.innerHTML = `
+        <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
+        <p><i class="fas ${icon}"></i> ${paymentText}</p>
+    `;
+}
+
+
+</script>
+</body>
+</html>

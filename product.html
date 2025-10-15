@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details - Farm Fresh Shop</title>
+<style>
+:root {
+  --bg-color: #f8f9fa;
+  --card-bg: #fff;
+  --text-color: #333;
+  --text-secondary: #555;
+  --border-color: #f0f0f0;
+  --header-bg: #2e7d32;
+  --header-text: #fff;
+  --filter-bg: #fff;
+  --filter-text: #555;
+  --filter-active-bg: #2e7d32;
+  --filter-active-text: #fff;
+  --search-border: #ddd;
+  --badge-bg: #f8f9fa;
+  --badge-text: #555;
+  --price-discount: #e74c3c;
+  --price-normal: #2e7d32;
+  --shadow-light: rgba(0,0,0,0.08);
+  --shadow-hover: rgba(0,0,0,0.15);
+  --green-tint: rgba(46,125,50,0.1);
+  --footer-bg: #2e7d32;
+  --footer-text: #fff;
+}
+
+body.dark {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #333;
+  --header-bg: #1b5e20;
+  --header-text: #fff;
+  --filter-bg: #2a2a2a;
+  --filter-text: #b0b0b0;
+  --filter-active-bg: #2e7d32;
+  --filter-active-text: #fff;
+  --search-border: #555;
+  --badge-bg: #2a2a2a;
+  --badge-text: #b0b0b0;
+  --price-discount: #ff6b6b;
+  --price-normal: #4caf50;
+  --shadow-light: rgba(0,0,0,0.3);
+  --shadow-hover: rgba(0,0,0,0.5);
+  --green-tint: rgba(46,125,50,0.2);
+  --footer-bg: #1b5e20;
+  --footer-text: #e0e0e0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  color: var(--text-color);
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+header {
+  text-align: center;
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px var(--shadow-light);
+  font-size: 24px;
+  font-weight: 500;
+  animation: slideDown 0.6s ease-out;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 { margin: 0; flex: 1; }
+#themeToggle {
+  background: none;
+  border: 1px solid var(--header-text);
+  color: var(--header-text);
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+#themeToggle:hover { transform: scale(1.1); }
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 12px 18px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px var(--shadow-light);
+}
+.back-btn:hover {
+  background: var(--green-tint);
+  color: var(--header-bg);
+  transform: translateX(-5px);
+  box-shadow: 0 4px 12px rgba(46,125,50,0.2);
+}
+
+.product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  opacity: 0;
+  transform: scale(0.95);
+  animation: zoomIn 0.6s ease-out 0.2s forwards;
+}
+@keyframes zoomIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.product-image {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  cursor: pointer;
+  margin: auto;
+  margin-left: 200px;
+}
+.product-image:hover {
+  transform: scale(1.05);
+  animation: wiggle 1s ease-in-out infinite;
+}
+@keyframes wiggle {
+  0%, 100% { transform: scale(1.05) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(1deg); }
+  75% { transform: scale(1.05) rotate(-1deg); }
+}
+
+.product-info {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.product-name {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--price-normal);
+  margin: 0 0 10px 0;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.product-name:hover { color: var(--header-bg); }
+.product-name::after {
+  display: block;
+  font-size: 32px;
+  margin-top: -10px;
+  transition: transform 0.3s ease;
+}
+.product-name:hover::after { transform: scale(1.2) rotate(10deg); }
+.product-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.4s forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.product-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+.meta-item {
+  text-align: center;
+  padding: 18px;
+  background: var(--badge-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px var(--shadow-light);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s ease-out forwards;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.meta-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, var(--green-tint), #c8e6c9);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.meta-item:hover::before { opacity: 1; }
+.meta-item:nth-child(1) { animation-delay: 0.5s; }
+.meta-item:nth-child(2) { animation-delay: 0.6s; }
+.meta-item:nth-child(3) { animation-delay: 0.7s; }
+.meta-item:nth-child(4) { animation-delay: 0.8s; }
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.meta-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 20px var(--shadow-hover);
+  background: var(--green-tint);
+  color: var(--header-bg);
+}
+.meta-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+.meta-item:hover .meta-label { color: var(--header-bg); }
+.meta-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--price-normal);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+.stock.in-stock .meta-value { color: #4caf50; }
+.stock.out-of-stock .meta-value { color: #f44336; }
+.discount .meta-value { color: #ff9800; }
+.meta-item:hover .meta-value { transform: scale(1.1); text-shadow: 0 0 8px rgba(46,125,50,0.3); }
+.price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+.original-price {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  transition: all 0.3s ease;
+}
+.discounted-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--price-discount);
+  transition: all 0.3s ease;
+}
+.meta-item:hover .discounted-price { 
+  color: #d84315; 
+  text-shadow: 0 0 12px rgba(231,76,60,0.4);
+  transform: scale(1.1);
+}
+.no-discount .discounted-price {
+  color: var(--price-normal);
+  font-size: 18px;
+  font-weight: 700;
+}
+.meta-item:hover .no-discount .discounted-price { 
+  color: var(--header-bg); 
+  text-shadow: 0 0 12px rgba(46,125,50,0.4);
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out 0.9s forwards;
+}
+.quantity-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-secondary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: bold;
+}
+.quantity-btn:hover { 
+  background: var(--green-tint); 
+  border-color: var(--header-bg);
+  color: var(--header-bg);
+  transform: scale(1.1) rotate(180deg);
+}
+.quantity-input {
+  width: 70px;
+  text-align: center;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  color: var(--text-color);
+  background: var(--card-bg);
+  transition: border-color 0.3s ease;
+}
+.quantity-input:focus {
+  border-color: var(--header-bg);
+  box-shadow: 0 0 0 3px var(--green-tint);
+  outline: none;
+}
+
+.add-to-cart {
+  background: var(--header-bg);
+  color: var(--header-text);
+  border: none;
+  border-radius: 10px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 20px auto;
+  display: block;
+  width: 200px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s ease-out 1s forwards;
+}
+.add-to-cart::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+.add-to-cart:hover::before { left: 100%; }
+.add-to-cart:hover {
+  background: #1b5e20;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(46,125,50,0.3);
+}
+
+.out-of-stock-msg {
+  text-align: center;
+  color: #f44336;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 20px 0;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 40px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px var(--shadow-light);
+  margin-top: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+footer div {
+  flex: 1;
+  min-width: 200px;
+}
+footer h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+footer p {
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+footer p:hover {
+  color: var(--green-tint);
+  cursor: pointer;
+}
+footer a {
+  color: var(--footer-text);
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .product-image {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+  }
+  .product-meta {
+    grid-template-columns: 1fr;
+  }
+  footer {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Farm Fresh Shop</h1>
+  <button id="themeToggle" title="Toggle Theme">🌙</button>
+</header>
+
+<a href="index.html" class="back-btn">← Back to Shop</a>
+
+<div class="product-container" id="product-container">
+</div>
+
+<footer>
+  <div>
+    <h4>Organo</h4>
+    <p>Premium organic vegetables and country meat delivered fresh to your door.</p>
+  </div>
+  <div>
+    <h4>Quick Links</h4>
+    <p><a href="index.html">Home</a></p>
+    <p><a href="products.html">Products</a></p>
+    <p><a href="about.html">About Us</a></p>
+    <p><a href="contact.html">Contact</a></p>
+  </div>
+  <div>
+    <h4>Customer Service</h4>
+    <p><a href="#shipping">Shipping Info</a></p>
+    <p><a href="#returns">Returns</a></p>
+    <p><a href="#faq">FAQ</a></p>
+    <p><a href="#privacy">Privacy Policy</a></p>
+  </div>
+  <div>
+    <h4>Get in Touch</h4>
+    <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
+    <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
+    <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+  </div>
+</footer>
+
+<script>
+const products = [
+  {id:1,name:"Tomato",category:"vegetable",price:500.00,weight:"1kg",stock:10,off:10,desc:"Fresh ripe tomatoes sourced from local farms. Ideal for salads, sauces, and fresh cooking.",image:"images/tomato.jpg",color:"#e74c3c"},
+  {id:2,name:"Potato",category:"vegetable",price:350.00,weight:"1kg",stock:0,off:0,desc:"Golden potatoes suitable for mashing, roasting, or frying. Currently out of stock—check back soon.",image:"images/potato.jpg",color:"#d4a373"},
+  {id:3,name:"Carrot",category:"vegetable",price:400.00,weight:"1kg",stock:12,off:5,desc:"Crisp orange carrots packed with vitamins. Versatile for snacking, juicing, or culinary use.",image:"images/carrot.jpg",color:"#e67e22"},
+  {id:4,name:"Onion",category:"vegetable",price:300.00,weight:"1kg",stock:15,off:0,desc:"Red onions with sharp flavor for cooking and garnishing.",image:"images/onion.jpg",color:"#8b4513"},
+  {id:5,name:"Garlic",category:"vegetable",price:250.00,weight:"500g",stock:20,off:5,desc:"Fresh garlic bulbs for aromatic seasoning in every dish.",image:"images/garlic.jpg",color:"#f5f5dc"},
+  {id:6,name:"Spinach",category:"vegetable",price:200.00,weight:"500g",stock:8,off:10,desc:"Nutritious spinach leaves, perfect for smoothies and salads.",image:"images/spinach.jpg",color:"#228b22"},
+  {id:7,name:"Broccoli",category:"vegetable",price:450.00,weight:"1kg",stock:14,off:0,desc:"Vibrant broccoli florets rich in fiber and vitamins.",image:"images/broccoli.jpg",color:"#32cd32"},
+  {id:8,name:"Cabbage",category:"vegetable",price:280.00,weight:"1kg",stock:18,off:5,desc:"Crisp green cabbage for coleslaw and stir-fries.",image:"images/cabbage.jpg",color:"#90ee90"},
+  {id:9,name:"Lettuce",category:"vegetable",price:150.00,weight:"1kg",stock:16,off:0,desc:"Fresh romaine lettuce for wraps and salads.",image:"images/lettuce.jpg",color:"#adff2f"},
+  {id:10,name:"Cucumber",category:"vegetable",price:220.00,weight:"1kg",stock:11,off:10,desc:"Cool cucumbers for hydration and refreshing salads.",image:"images/cucumber.jpg",color:"#90ee90"},
+  {id:11,name:"Bell Pepper",category:"vegetable",price:380.00,weight:"500g",stock:9,off:5,desc:"Colorful bell peppers adding sweetness to any meal.",image:"images/bellpepper.jpg",color:"#ff4500"},
+  {id:12,name:"Zucchini",category:"vegetable",price:320.00,weight:"1kg",stock:13,off:0,desc:"Tender zucchini for grilling and baking.",image:"images/zucchini.jpg",color:"#9acd32"},
+  {id:13,name:"Eggplant",category:"vegetable",price:290.00,weight:"1kg",stock:7,off:15,desc:"Glossy eggplants for hearty Mediterranean dishes.",image:"images/eggplant.jpg",color:"#4b0082"},
+  {id:14,name:"Cauliflower",category:"vegetable",price:410.00,weight:"1kg",stock:17,off:5,desc:"White cauliflower heads for roasting and mashing.",image:"images/cauliflower.jpg",color:"#fff8dc"},
+  {id:15,name:"Green Beans",category:"vegetable",price:260.00,weight:"500g",stock:19,off:0,desc:"Crisp green beans for steaming and sautéing.",image:"images/greenbeans.jpg",color:"#228b22"},
+  {id:16,name:"Peas",category:"vegetable",price:180.00,weight:"500g",stock:12,off:10,desc:"Sweet peas frozen fresh for easy cooking.",image:"images/peas.jpg",color:"#32cd32"},
+  {id:17,name:"Radish",category:"vegetable",price:120.00,weight:"500g",stock:15,off:0,desc:"Spicy radishes for salads and pickling.",image:"images/radish.jpg",color:"#ff1493"},
+  {id:18,name:"Beetroot",category:"vegetable",price:340.00,weight:"1kg",stock:6,off:5,desc:"Earthy beetroots for roasting and juicing.",image:"images/beetroot.jpg",color:"#8b0000"},
+  {id:19,name:"Kale",category:"vegetable",price:230.00,weight:"500g",stock:10,off:10,desc:"Robust kale leaves for chips and soups.",image:"images/kale.jpg",color:"#006400"},
+  {id:20,name:"Asparagus",category:"vegetable",price:550.00,weight:"500g",stock:5,off:0,desc:"Tender asparagus spears for grilling and steaming.",image:"images/asparagus.jpg",color:"#7cfc00"},
+  {id:21,name:"Apple",category:"fruit",price:800.00,weight:"1kg",stock:15,off:5,desc:"Crisp red apples, hand-picked for optimal freshness.",image:"images/apple.jpg",color:"#e74c3c"},
+  {id:22,name:"Mango",category:"fruit",price:1200.00,weight:"1kg",stock:8,off:10,desc:"Sweet, juicy mangoes offering a tropical flavor.",image:"images/mango.jpg",color:"#f1c40f"},
+  {id:23,name:"Banana",category:"fruit",price:250.00,weight:"1kg",stock:20,off:0,desc:"Ripe bananas for smoothies and baking.",image:"images/banana.jpg",color:"#ffd700"},
+  {id:24,name:"Orange",category:"fruit",price:450.00,weight:"1kg",stock:14,off:5,desc:"Juicy oranges bursting with vitamin C.",image:"images/orange.jpg",color:"#ffa500"},
+  {id:25,name:"Strawberry",category:"fruit",price:650.00,weight:"500g",stock:12,off:10,desc:"Fresh strawberries for desserts and snacking.",image:"images/strawberry.jpg",color:"#ff69b4"},
+  {id:26,name:"Blueberry",category:"fruit",price:900.00,weight:"500g",stock:9,off:0,desc:"Antioxidant-rich blueberries for yogurt and pies.",image:"images/blueberry.jpg",color:"#4682b4"},
+  {id:27,name:"Pineapple",category:"fruit",price:700.00,weight:"1kg",stock:11,off:15,desc:"Tropical pineapples for grilling and juicing.",image:"images/pineapple.jpg",color:"#ffd700"},
+  {id:28,name:"Grapes",category:"fruit",price:550.00,weight:"500g",stock:16,off:5,desc:"Seedless grapes in red and green varieties.",image:"images/grapes.jpg",color:"#8b0000"},
+  {id:29,name:"Kiwi",category:"fruit",price:400.00,weight:"500g",stock:13,off:0,desc:"Fuzzy kiwis packed with vitamin C.",image:"images/kiwi.jpg",color:"#7cfc00"},
+  {id:30,name:"Lemon",category:"fruit",price:200.00,weight:"1kg",stock:18,off:10,desc:"Zesty lemons for drinks and marinades.",image:"images/lemon.jpg",color:"#fffacd"},
+  {id:31,name:"Lime",category:"fruit",price:220.00,weight:"500g",stock:17,off:0,desc:"Tangy limes for cocktails and curries.",image:"images/lime.jpg",color:"#90ee90"},
+  {id:32,name:"Watermelon",category:"fruit",price:350.00,weight:"1kg",stock:10,off:5,desc:"Refreshing watermelon slices for summer.",image:"images/watermelon.jpg",color:"#ff4500"},
+  {id:33,name:"Cantaloupe",category:"fruit",price:480.00,weight:"1kg",stock:7,off:10,desc:"Sweet cantaloupe melons for salads.",image:"images/cantaloupe.jpg",color:"#ffdab9"},
+  {id:34,name:"Peach",category:"fruit",price:600.00,weight:"1kg",stock:14,off:0,desc:"Juicy peaches for pies and fresh eating.",image:"images/peach.jpg",color:"#ffc0cb"},
+  {id:35,name:"Plum",category:"fruit",price:380.00,weight:"1kg",stock:15,off:5,desc:"Plump plums with sweet-tart flavor.",image:"images/plum.jpg",color:"#dda0dd"},
+  {id:36,name:"Cherry",category:"fruit",price:750.00,weight:"500g",stock:6,off:15,desc:"Bing cherries for desserts and snacking.",image:"images/cherry.jpg",color:"#dc143c"},
+  {id:37,name:"Pear",category:"fruit",price:420.00,weight:"1kg",stock:12,off:0,desc:"Bosc pears for baking and salads.",image:"images/pear.jpg",color:"#f0e68c"},
+  {id:38,name:"Papaya",category:"fruit",price:500.00,weight:"1kg",stock:9,off:10,desc:"Tropical papaya for enzymes and freshness.",image:"images/papaya.jpg",color:"#ff1493"},
+  {id:39,name:"Pomegranate",category:"fruit",price:680.00,weight:"500g",stock:8,off:5,desc:"Ruby pomegranate seeds for antioxidants.",image:"images/pomegranate.jpg",color:"#b22222"},
+  {id:40,name:"Avocado",category:"fruit",price:850.00,weight:"1kg",stock:11,off:0,desc:"Creamy avocados for toast and guacamole.",image:"images/avocado.jpg",color:"#90ee90"},
+  {id:41,name:"Chicken Breast",category:"meat",price:1500.00,weight:"500g",stock:12,off:15,desc:"Premium free-range chicken breast, lean and tender.",image:"images/chicken.jpg",color:"#f1948a"},
+  {id:42,name:"Beef Steak",category:"meat",price:2500.00,weight:"500g",stock:8,off:10,desc:"Grass-fed beef steak for grilling perfection.",image:"images/beefsteak.jpg",color:"#8b0000"},
+  {id:43,name:"Pork Chop",category:"meat",price:1200.00,weight:"500g",stock:10,off:0,desc:"Juicy pork chops for pan-frying or baking.",image:"images/porkchop.jpg",color:"#d2691e"},
+  {id:44,name:"Lamb Leg",category:"meat",price:3000.00,weight:"1kg",stock:6,off:5,desc:"Tender lamb leg for roasting family dinners.",image:"images/lambleg.jpg",color:"#f5deb3"},
+  {id:45,name:"Turkey Breast",category:"meat",price:1800.00,weight:"500g",stock:14,off:10,desc:"Lean turkey breast for holiday feasts.",image:"images/turkeybreast.jpg",color:"#ffdab9"},
+  {id:46,name:"Salmon Fillet",category:"meat",price:2200.00,weight:"500g",stock:9,off:0,desc:"Wild-caught salmon fillet rich in omega-3.",image:"images/salmon.jpg",color:"#ff6b35"},
+  {id:47,name:"Tuna Steak",category:"meat",price:2000.00,weight:"500g",stock:7,off:15,desc:"Fresh tuna steaks for searing and salads.",image:"images/tunasteak.jpg",color:"#4682b4"},
+  {id:48,name:"Ground Beef",category:"meat",price:900.00,weight:"1kg",stock:16,off:5,desc:"Lean ground beef for burgers and meatballs.",image:"images/groundbeef.jpg",color:"#8b4513"},
+  {id:49,name:"Sausage",category:"meat",price:750.00,weight:"500g",stock:11,off:0,desc:"Spicy sausages for grilling and breakfast.",image:"images/sausage.jpg",color:"#cd853f"},
+  {id:50,name:"Bacon",category:"meat",price:650.00,weight:"500g",stock:13,off:10,desc:"Crispy bacon strips for sandwiches and sides.",image:"images/bacon.jpg",color:"#f4a460"},
+  {id:51,name:"Ribs",category:"meat",price:2800.00,weight:"1kg",stock:5,off:5,desc:"Slow-cooked ribs with smoky flavor.",image:"images/ribs.jpg",color:"#a0522d"},
+  {id:52,name:"Shrimp",category:"meat",price:1600.00,weight:"500g",stock:10,off:0,desc:"Peeled shrimp for stir-fries and cocktails.",image:"images/shrimp.jpg",color:"#20b2aa"},
+  {id:53,name:"Cod",category:"meat",price:1900.00,weight:"500g",stock:12,off:10,desc:"Flaky cod fillets for baking and frying.",image:"images/cod.jpg",color:"#add8e6"},
+  {id:54,name:"Chicken Thighs",category:"meat",price:1100.00,weight:"1kg",stock:15,off:5,desc:"Juicy chicken thighs for curries and roasts.",image:"images/chickenthighs.jpg",color:"#f1948a"},
+  {id:55,name:"Duck Breast",category:"meat",price:3200.00,weight:"500g",stock:4,off:15,desc:"Rich duck breast for gourmet pan-searing.",image:"images/duckbreast.jpg",color:"#daa520"},
+  {id:56,name:"Ground Pork",category:"meat",price:850.00,weight:"1kg",stock:14,off:0,desc:"Fresh ground pork for dumplings and stir-fries.",image:"images/groundpork.jpg",color:"#d2691e"},
+  {id:57,name:"Sirloin Steak",category:"meat",price:2800.00,weight:"500g",stock:9,off:5,desc:"Tender sirloin steak for quick grilling.",image:"images/sirloin.jpg",color:"#8b0000"},
+  {id:58,name:"Pork Belly",category:"meat",price:1400.00,weight:"1kg",stock:7,off:10,desc:"Crispy pork belly for Asian-inspired dishes.",image:"images/porkbelly.jpg",color:"#cd853f"},
+  {id:59,name:"Lamb Chops",category:"meat",price:2600.00,weight:"500g",stock:8,off:0,desc:"Marbled lamb chops for elegant dinners.",image:"images/lambchops.jpg",color:"#f5deb3"},
+  {id:60,name:"Scallops",category:"meat",price:3500.00,weight:"500g",stock:6,off:15,desc:"Plump sea scallops for searing and salads.",image:"images/scallops.jpg",color:"#f0e68c"},
+];
+
+const urlParams = new URLSearchParams(window.location.search);
+const productId = parseInt(urlParams.get('id'));
+const product = products.find(p => p.id === productId);
+
+function getPriceDisplay(p) {
+  const discountedPrice = p.off > 0 ? Math.round(p.price * (1 - p.off / 100)) : p.price;
+  if (p.off > 0) {
+    return `
+      <div class="price-container">
+        <span class="original-price">LKR ${p.price.toFixed(2)}</span>
+        <span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span>
+      </div>
+    `;
+  } else {
+    return `<div class="price-container no-discount"><span class="discounted-price">LKR ${discountedPrice.toFixed(2)}</span></div>`;
+  }
+}
+
+if (product) {
+  const container = document.getElementById('product-container');
+  const stockClass = product.stock > 0 ? 'in-stock' : 'out-of-stock';
+  const stockText = product.stock > 0 ? 'In Stock' : 'Out of Stock';
+  const discountHtml = product.off > 0 ? `<div class="meta-item discount"><div class="meta-label">Discount</div><div class="meta-value">${product.off}% Off</div></div>` : '';
+  const outOfStockMsg = product.stock === 0 ? '<p class="out-of-stock-msg">Sorry, this item is currently out of stock. Please check back later!</p>' : '';
+  const priceHtml = getPriceDisplay(product);
+  
+  container.innerHTML = `
+    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/800x300?text=${product.name}'">
+    <div class="product-info">
+      <h1 class="product-name">${product.name}</h1>
+      <p class="product-desc">${product.desc}</p>
+      <div class="product-meta">
+        <div class="meta-item stock ${stockClass}">
+          <div class="meta-label">Availability</div>
+          <div class="meta-value">${stockText}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Weight</div>
+          <div class="meta-value">${product.weight}</div>
+        </div>
+        ${discountHtml}
+        <div class="meta-item">
+          <div class="meta-label">Price</div>
+          ${priceHtml}
+        </div>
+      </div>
+      ${outOfStockMsg}
+      ${product.stock > 0 ? `
+        <div class="quantity-selector">
+          <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+          <input type="number" id="quantityInput" class="quantity-input" value="1" min="1" max="${product.stock}">
+          <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+        </div>
+        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+      ` : ''}
+    </div>
+  `;
+} else {
+  document.getElementById('product-container').innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary); animation: fadeIn 0.6s ease-out;">Product not found. <a href="index.html" class="back-btn">Go back to shop</a></p>';
+}
+
+let currentQuantity = 1;
+
+function changeQuantity(delta) {
+  const input = document.getElementById('quantityInput');
+  if (input) {
+    currentQuantity = Math.max(1, Math.min(parseInt(input.value) + delta, parseInt(input.max || 999)));
+    input.value = currentQuantity;
+  }
+}
+
+function addToCart(productId) {
+  if (!product || product.stock === 0) return;
+  const qty = parseInt(document.getElementById('quantityInput').value) || 1;
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  const cartItem = cart.find(item => item.id === productId);
+  if (cartItem) {
+    cartItem.qty = Math.min(cartItem.qty + qty, product.stock);
+  } else {
+    cart.push({ id: productId, qty });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert(`Added ${qty} item(s) of ${product.name} to cart!`);
+}
+
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const isDark = localStorage.getItem('darkMode') === 'true';
+if (isDark) {
+  body.classList.add('dark');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const darkMode = body.classList.contains('dark');
+  localStorage.setItem('darkMode', darkMode);
+  themeToggle.textContent = darkMode ? '☀️' : '🌙';
+});
+</script>
+</body>
+</html>

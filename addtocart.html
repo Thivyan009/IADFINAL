@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart - Organo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+    --bg-color: #f8f9fa;
+    --card-bg: #fff;
+    --text-color: #333;
+    --text-secondary: #555;
+    --border-color: #f0f0f0;
+    --header-bg: #2e7d32;
+    --header-text: #fff;
+    --shadow-light: rgba(0,0,0,0.08);
+    --shadow-hover: rgba(0,0,0,0.15);
+    --green-tint: rgba(46,125,50,0.1);
+    --sidebar-bg: #f1f3f5;
+    --sidebar-text: #333;
+    --footer-bg: #2e7d32;
+    --footer-text: #fff;
+    --price-discount: #e74c3c;
+    --price-normal: #2e7d32;
+}
+
+body.dark {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border-color: #333;
+    --header-bg: #1b5e20;
+    --header-text: #fff;
+    --shadow-light: rgba(0,0,0,0.3);
+    --shadow-hover: rgba(0,0,0,0.5);
+    --green-tint: rgba(46,125,50,0.2);
+    --sidebar-bg: #2a2a2a;
+    --sidebar-text: #e0e0e0;
+    --footer-bg: #1b5e20;
+    --footer-text: #e0e0e0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+    display: flex;
+}
+
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -370px;
+    transition: left 0.3s ease;
+    padding: 30px 20px;
+    box-shadow: 2px 0 10px var(--shadow-light);
+    z-index: 1000;
+}
+.sidebar.active {
+    left: 0;
+}
+.sidebar-toggle {
+    position: fixed;
+    top: 30px;
+    left: 5px;
+    background: var(--header-bg);
+    color: var(--header-text);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1001;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+.sidebar-toggle:hover {
+    transform: scale(1.1);
+}
+.sidebar h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin: 0 0 30px;
+    text-align: center;
+    color: var(--price-normal);
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    margin: 15px 0;
+}
+.sidebar ul li a {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.sidebar ul li a:hover {
+    background: var(--green-tint);
+    transform: translateX(5px);
+}
+.sidebar ul li a i {
+    font-size: 18px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 30px;
+    transition: margin-left 0.3s ease;
+}
+.main-content.shifted {
+    margin-left: 300px;
+}
+
+header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    margin: 0;
+    flex: 1;
+}
+#themeToggle {
+    background: none;
+    border: 1px solid var(--header-text);
+    color: var(--header-text);
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+#themeToggle:hover {
+    transform: scale(1.1);
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.cart-item {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px var(--shadow-light);
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+.cart-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-hover);
+}
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+.cart-item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.cart-item-details h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--price-normal);
+    margin: 0;
+}
+.cart-item-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+.cart-item-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.cart-item-meta .price {
+    font-weight: 700;
+    color: var(--price-discount);
+}
+.cart-item-meta .no-discount {
+    color: var(--price-normal);
+}
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.quantity-control button {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+.quantity-control button:hover {
+    background: #1b5e20;
+    transform: translateY(-2px);
+}
+.quantity-control input {
+    width: 50px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--text-color);
+    background: var(--card-bg);
+}
+.quantity-control input:focus {
+    border-color: var(--price-normal);
+    outline: none;
+}
+.remove-item {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+.remove-item:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+.cart-summary {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--shadow-light);
+    margin-top: 20px;
+}
+.cart-summary h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin: 0 0 20px;
+    color: var(--price-normal);
+}
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 16px;
+}
+.summary-details div {
+    display: flex;
+    justify-content: space-between;
+}
+.summary-details .total {
+    font-weight: 700;
+    color: var(--price-normal);
+}
+.checkout-button {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+.checkout-button:hover {
+    background: #1b5e20;
+    transform: translateY(-2px);
+}
+
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-between;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    margin-top: 40px;
+}
+footer div {
+    flex: 1;
+    min-width: 200px;
+}
+footer h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+footer p {
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+footer p:hover {
+    color: var(--green-tint);
+    cursor: pointer;
+}
+footer a {
+    color: var(--footer-text);
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 220px;
+        left: -220px;
+    }
+    .main-content.shifted {
+        margin-left: 100px;
+    }
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .cart-item img {
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+    }
+    .quantity-control {
+        width: 100%;
+        justify-content: space-between;
+    }
+    footer {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+</style>
+</head>
+<body>
+<button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+<div class="sidebar">
+    <h2>Organo</h2>
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+        <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="addtocart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+        <li><a href="favorites.html"><i class="fas fa-heart"></i> Favorites</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <header>
+        <h1>Shopping Cart</h1>
+        <button id="themeToggle" title="Toggle Theme">🌙</button>
+    </header>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-summary" id="cart-summary"></div>
+    <footer>
+        <div>
+            <h4>Organo</h4>
+            <p>Premium organic vegetables and country meat delivered fresh to your door.</p>
+        </div>
+        <div>
+            <h4>Quick Links</h4>
+            <p><a href="#vegetables">Vegetables</a></p>
+            <p><a href="#meat">Country Meat</a></p>
+            <p><a href="#offers">Seasonal Offers</a></p>
+            <p><a href="about.html">About Us</a></p>
+        </div>
+        <div>
+            <h4>Customer Service</h4>
+            <p><a href="contact.html">Contact Us</a></p>
+            <p><a href="#shipping">Shipping Info</a></p>
+            <p><a href="#returns">Returns</a></p>
+            <p><a href="#faq">FAQ</a></p>
+        </div>
+        <div>
+            <h4>Get in Touch</h4>
+            <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
+            <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
+            <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+const products = [
+    {id:1,name:"Tomato",category:"vegetable",price:500.00,weight:"1kg",stock:10,off:10,desc:"Fresh ripe tomatoes sourced from local farms.",image:"images/tomato.jpg",color:"#e74c3c"},
+    {id:3,name:"Carrot",category:"vegetable",price:400.00,weight:"1kg",stock:12,off:5,desc:"Crisp orange carrots packed with vitamins.",image:"images/carrot.jpg",color:"#e67e22"},
+    {id:4,name:"Onion",category:"vegetable",price:300.00,weight:"1kg",stock:15,off:0,desc:"Red onions with sharp flavor.",image:"images/onion.jpg",color:"#8b4513"},
+    {id:5,name:"Garlic",category:"vegetable",price:250.00,weight:"500g",stock:20,off:5,desc:"Fresh garlic bulbs for seasoning.",image:"images/garlic.jpg",color:"#f5f5dc"}
+];
+    // ... other products from your list
+
+
+let cart = JSON.parse(localStorage.getItem('cart') || JSON.stringify([
+    {"id":1,"qty":1},  // Tomato
+    {"id":3,"qty":2},  // Carrot
+    {"id":4,"qty":1},  // Onion
+    {"id":5,"qty":1}   // Garlic
+]));
+
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateQuantity(productId, qty) {
+    const cartItem = cart.find(item => item.id === productId);
+    const product = products.find(p => p.id === productId);
+    if (!cartItem || !product) return;
+    qty = Math.max(1, Math.min(qty, product.stock));
+    cartItem.qty = qty;
+    saveCart();
+    displayCart();
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    saveCart();
+    displayCart();
+}
+
+function getPriceDisplay(p, qty) {
+    const discountedPrice = p.off > 0 ? Math.round(p.price * (1 - p.off / 100)) : p.price;
+    const total = discountedPrice * qty;
+    return `
+        <span class="price ${p.off > 0 ? '' : 'no-discount'}">LKR ${total.toFixed(2)}</span>
+        ${p.off > 0 ? `<span style="text-decoration: line-through; color: var(--text-secondary);">LKR ${(p.price * qty).toFixed(2)}</span>` : ''}
+    `;
+}
+
+function displayCart() {
+    const cartItems = document.getElementById('cart-items');
+    const cartSummary = document.getElementById('cart-summary');
+    cartItems.innerHTML = '';
+    cartSummary.innerHTML = '';
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align: center; font-size: 18px;">Your cart is empty.</p>';
+        return;
+    }
+
+    let subtotal = 0;
+    cart.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        if (!product) return;
+        const discountedPrice = product.off > 0 ? Math.round(product.price * (1 - product.off / 100)) : product.price;
+        subtotal += discountedPrice * item.qty;
+
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/80x80?text=${product.name}'">
+            <div class="cart-item-details">
+                <h3>${product.name}</h3>
+                <div class="cart-item-meta">
+                    <span><i class="fas fa-weight-hanging"></i> ${product.weight}</span>
+                    ${product.off > 0 ? `<span><i class="fas fa-tags"></i> ${product.off}% Off</span>` : ''}
+                    ${getPriceDisplay(product, item.qty)}
+                </div>
+                <div class="quantity-control">
+                    <button onclick="updateQuantity(${product.id}, ${item.qty - 1})">-</button>
+                    <input type="number" value="${item.qty}" min="1" max="${product.stock}" onchange="updateQuantity(${product.id}, parseInt(this.value))">
+                    <button onclick="updateQuantity(${product.id}, ${item.qty + 1})">+</button>
+                    <button class="remove-item" onclick="removeFromCart(${product.id})">Remove</button>
+                </div>
+            </div>
+        `;
+        cartItems.appendChild(cartItem);
+    });
+
+    const tax = subtotal * 0.1;
+    const total = subtotal + tax;
+    cartSummary.innerHTML = `
+        <h3>Cart Summary</h3>
+        <div class="summary-details">
+            <div><span>Subtotal:</span><span>LKR ${subtotal.toFixed(2)}</span></div>
+            <div><span>Tax (10%):</span><span>LKR ${tax.toFixed(2)}</span></div>
+            <div class="total"><span>Total:</span><span>LKR ${total.toFixed(2)}</span></div>
+        </div>
+        <button class="checkout-button" onclick="window.location.href='Checkout_01_Customer info.html'">Proceed to Checkout</button>
+    `;
+}
+
+document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.toggle('active');
+    document.querySelector('.main-content').classList.toggle('shifted');
+});
+
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const isDark = localStorage.getItem('darkMode') === 'true';
+if (isDark) {
+    body.classList.add('dark');
+    themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    const darkMode = body.classList.contains('dark');
+    localStorage.setItem('darkMode', darkMode);
+    themeToggle.textContent = darkMode ? '☀️' : '🌙';
+});
+
+displayCart();
+</script>
+</body>
+</html>

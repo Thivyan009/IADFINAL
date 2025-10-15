@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bundle Offers - Organo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #f8f9fa;
+    --card-bg: #fff;
+    --text-color: #333;
+    --text-secondary: #555;
+    --border-color: #f0f0f0;
+    --header-bg: #2e7d32;
+    --header-text: #fff;
+    --accent: #4caf50;
+    --shadow-light: rgba(0,0,0,0.08);
+  }
+  body.dark {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border-color: #333;
+    --header-bg: #1b5e20;
+    --header-text: #fff;
+    --accent: #4caf50;
+    --shadow-light: rgba(0,0,0,0.3);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-color); }
+  header { background: var(--header-bg); color: var(--header-text); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-weight: 600; text-decoration: none; color: var(--header-text); font-size: 20px; }
+  .actions { display: flex; gap: 10px; }
+  .icon-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: var(--header-text); padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+  main { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .subtitle { color: var(--text-secondary); margin-bottom: 18px; font-size: 14px; }
+  .bundles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .bundle { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 12px var(--shadow-light); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .bundle h3 { margin: 0; color: var(--header-bg); font-size: 18px; }
+  .items { font-size: 14px; color: var(--text-secondary); }
+  .price { display: flex; align-items: baseline; gap: 10px; }
+  .price .now { color: #e74c3c; font-weight: 700; }
+  .price .was { color: var(--text-secondary); text-decoration: line-through; font-size: 14px; }
+  .btn { background: var(--header-bg); color: var(--header-text); border: none; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-weight: 500; }
+  .note { font-size: 12px; color: var(--text-secondary); }
+  footer { max-width: 1000px; margin: 24px auto; padding: 16px; color: var(--text-secondary); font-size: 13px; }
+</style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">Organo</a>
+    <div class="actions">
+      <button class="icon-btn" onclick="window.location.href='addtocart.html'" title="View Cart"><i class="fas fa-shopping-cart"></i></button>
+      <button class="icon-btn" id="themeToggle" title="Toggle Theme">🌙</button>
+    </div>
+  </header>
+  <main>
+    <h1>Bundle Offers</h1>
+    <p class="subtitle">Simple combos with instant savings. Add a bundle to your cart in one click.</p>
+
+    <section class="bundles" id="bundles"></section>
+    <p class="note">Prices shown reflect bundle discounts. Stock limits apply per item.</p>
+  </main>
+  <footer>
+    © 2024 Organo. Fresh from Farm to Table.
+  </footer>
+
+<script>
+// Minimal shared catalog subset for bundle resolution (ids align with products.html)
+const catalog = [
+  {id:1,name:"Tomato",price:500,off:10,image:"images/tomato.jpg"},
+  {id:3,name:"Carrot",price:400,off:5,image:"images/carrot.jpg"},
+  {id:4,name:"Onion",price:300,off:0,image:"images/onion.jpg"},
+  {id:5,name:"Garlic",price:250,off:5,image:"images/garlic.jpg"},
+  {id:21,name:"Apple",price:800,off:5,image:"images/apple.jpg"},
+  {id:22,name:"Mango",price:1200,off:10,image:"images/mango.jpg"},
+  {id:41,name:"Chicken Breast",price:1500,off:15,image:"images/chicken.jpg"}
+];
+
+// Define minimal bundles: items -> [{id, qty}], discountPercent applies to subtotal after per-item offs
+const bundles = [
+  {
+    code: 'VEG-SAVER',
+    title: 'Veggie Saver Pack',
+    items: [ {id:1, qty:1}, {id:3, qty:1}, {id:4, qty:1}, {id:5, qty:1} ],
+    discountPercent: 8
+  },
+  {
+    code: 'FRUIT-DUO',
+    title: 'Fruit Duo',
+    items: [ {id:21, qty:1}, {id:22, qty:1} ],
+    discountPercent: 7
+  },
+  {
+    code: 'PROTEIN-PLUS',
+    title: 'Protein + Veg Combo',
+    items: [ {id:41, qty:1}, {id:1, qty:1}, {id:3, qty:1} ],
+    discountPercent: 6
+  }
+];
+
+function priceAfterItemOff(p) {
+  const discounted = p.off > 0 ? Math.round(p.price * (1 - p.off/100)) : p.price;
+  return discounted;
+}
+
+function computeTotals(bundle) {
+  let was = 0;
+  let interim = 0;
+  bundle.items.forEach(({id, qty}) => {
+    const p = catalog.find(x => x.id === id);
+    if (!p) return;
+    was += p.price * qty;
+    interim += priceAfterItemOff(p) * qty;
+  });
+  const now = Math.round(interim * (1 - bundle.discountPercent/100));
+  return { was, now };
+}
+
+function addBundleToCart(bundle) {
+  const stored = JSON.parse(localStorage.getItem('cart') || '[]');
+  // merge quantities for each item
+  bundle.items.forEach(({id, qty}) => {
+    const idx = stored.findIndex(i => i.id === id);
+    if (idx >= 0) stored[idx].qty += qty; else stored.push({id, qty});
+  });
+  localStorage.setItem('cart', JSON.stringify(stored));
+  alert('Bundle added to cart!');
+}
+
+function renderBundles() {
+  const container = document.getElementById('bundles');
+  container.innerHTML = '';
+  bundles.forEach(b => {
+    const totals = computeTotals(b);
+    const itemsText = b.items.map(({id, qty}) => {
+      const p = catalog.find(x => x.id === id);
+      return p ? `${qty} × ${p.name}` : `${qty} × Item ${id}`;
+    }).join(', ');
+    const card = document.createElement('div');
+    card.className = 'bundle';
+    card.innerHTML = `
+      <h3>${b.title}</h3>
+      <div class="items">${itemsText}</div>
+      <div class="price">
+        <span class="now">LKR ${totals.now.toFixed(2)}</span>
+        <span class="was">LKR ${totals.was.toFixed(2)}</span>
+      </div>
+      <button class="btn" onclick='addBundleToCart(${JSON.stringify(b).replace(/"/g, "&quot;")})'>Add Bundle to Cart</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const isDark = localStorage.getItem('darkMode') === 'true';
+if (isDark) { body.classList.add('dark'); themeToggle.textContent = '☀️'; }
+themeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const darkMode = body.classList.contains('dark');
+  localStorage.setItem('darkMode', darkMode);
+  themeToggle.textContent = darkMode ? '☀️' : '🌙';
+});
+
+renderBundles();
+</script>
+</body>
+</html>
+
