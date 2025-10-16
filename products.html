@@ -67,10 +67,280 @@ body {
   flex-direction: column;
 }
 
+/* Professional Header */
+header {
+  background: linear-gradient(135deg, var(--header-bg) 0%, #1b5e20 100%);
+  color: var(--header-text);
+  padding: 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header-top {
+  background: rgba(0,0,0,0.1);
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.header-top p {
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+nav {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.logo {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--header-text);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo::before {
+  content: '🌱';
+  font-size: 1.8rem;
+  animation: pulse 2s infinite;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--header-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+}
+
+.nav-links a:hover {
+  color: var(--accent-color);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-color), #81c784);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-links a:hover::after {
+  width: 80%;
+}
+
+.nav-links a.active {
+  color: var(--accent-color);
+}
+
+.nav-links a.active::after {
+  width: 80%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-contact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.header-contact i {
+  font-size: 1rem;
+  color: var(--accent-color);
+}
+
+.theme-toggle, .cart-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--header-text);
+  padding: 0.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before, .cart-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.theme-toggle:hover::before, .cart-btn:hover::before {
+  left: 100%;
+}
+
+.theme-toggle:hover, .cart-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.cart-btn {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--accent-color);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  animation: bounce 2s infinite;
+}
+
+.profile-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px var(--shadow-hover);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 1rem 1.5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: var(--green-tint);
+  color: var(--header-bg);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
   padding: 20px;
+  margin-top: 120px; /* Account for fixed header */
 }
 
 /* Header Section */
@@ -693,42 +963,203 @@ body {
 }
 
 /* Footer */
+/* Professional Footer */
 footer {
-  background: var(--footer-bg);
+  background: linear-gradient(135deg, var(--footer-bg) 0%, #1b5e20 100%);
   color: var(--footer-text);
-  padding: 40px 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: space-between;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px var(--shadow-light);
-  margin-top: 40px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
 }
 
-footer div {
-  flex: 1;
-  min-width: 200px;
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="footerPattern" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23footerPattern)"/></svg>');
+  opacity: 0.3;
 }
 
-footer h4 {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  margin-bottom: 20px;
+.footer-main {
+  padding: 4rem 2rem 2rem;
+  position: relative;
+  z-index: 1;
 }
 
-footer p {
-  margin: 10px 0;
-  font-size: 14px;
-  line-height: 1.6;
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
 }
 
-footer a {
+.footer-section h4 {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--accent-color);
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+.footer-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-color), #81c784);
+  border-radius: 2px;
+}
+
+.footer-section p {
+  color: var(--footer-text);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.footer-section a {
   color: var(--footer-text);
   text-decoration: none;
+  line-height: 1.8;
+  margin-bottom: 0.8rem;
+  display: block;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-left: 1rem;
 }
 
-footer a:hover {
+.footer-section a::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: var(--accent-color);
+}
+
+.footer-section a:hover {
+  color: var(--accent-color);
+  transform: translateX(5px);
+  opacity: 1;
+}
+
+.footer-section a:hover::before {
+  opacity: 1;
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.footer-social a {
+  width: 45px;
+  height: 45px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.footer-social a:hover {
+  background: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+}
+
+.footer-newsletter {
+  background: rgba(255,255,255,0.05);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 25px;
+  background: rgba(255,255,255,0.1);
+  color: var(--footer-text);
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+.newsletter-form input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.newsletter-form input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: rgba(255,255,255,0.15);
+}
+
+.newsletter-form button {
+  padding: 0.8rem 1.5rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76,175,80,0.3);
+}
+
+.footer-bottom {
+  background: rgba(0,0,0,0.2);
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.footer-bottom a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-bottom a:hover {
   text-decoration: underline;
 }
 
@@ -787,6 +1218,57 @@ footer a:hover {
 </style>
 </head>
 <body>
+  <!-- Professional Header -->
+  <header>
+    <div class="header-top">
+      <p><i class="fas fa-phone"></i> +94 74 976 8651 | <i class="fas fa-envelope"></i> organo@gmail.com | <i class="fas fa-truck"></i> Free Delivery on Orders Over LKR 2000</p>
+    </div>
+    <nav>
+      <a href="index.html" class="logo">Organo</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html" class="active">Products</a></li>
+        <li><a href="bundle.html">Bundles</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="header-actions">
+        <div class="header-contact">
+          <i class="fas fa-phone"></i>
+          <span>Call Now</span>
+        </div>
+        <div class="profile-bar">
+          <div class="profile-dropdown" onclick="toggleProfile()">
+            <div class="profile-avatar">JD</div>
+            <div class="dropdown-menu" id="profileMenu">
+              <a href="settings.html" class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </a>
+              <a href="settings.html" class="dropdown-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+              <a href="#orders" class="dropdown-item">
+                <i class="fas fa-box"></i>
+                <span>Orders</span>
+              </a>
+              <a href="login.html" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <button class="cart-btn" onclick="window.location.href='addtocart.html'" title="View Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">🌙</button>
+      </div>
+    </nav>
+  </header>
+
 <div class="main-content">
   <div class="header-section">
     <div class="filters-search-container">
@@ -820,35 +1302,92 @@ footer a:hover {
     </div>
   </div>
   <div id="dynamic-content"></div>
+  <!-- Footer -->
   <footer>
-    <div>
-      <h4>Organo</h4>
-      <p>Premium organic vegetables and country meat delivered fresh to your door.</p>
+    <div class="footer-main">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h4>Organo</h4>
+          <p>Premium organic vegetables and country meat delivered fresh to your door. Experience the taste of nature's finest produce.</p>
+          <div class="footer-social">
+            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="products.html">Products</a>
+          <a href="bundle.html">Bundles</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact</a>
+          <a href="#shipping">Shipping Info</a>
+        </div>
+        <div class="footer-section">
+          <h4>Customer Service</h4>
+          <a href="#returns">Returns</a>
+          <a href="#faq">FAQ</a>
+          <a href="#privacy">Privacy Policy</a>
+          <a href="#terms">Terms of Service</a>
+          <a href="#support">Support</a>
+        </div>
+        <div class="footer-section">
+          <h4>Get in Touch</h4>
+          <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
+          <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
+          <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+          <div class="footer-newsletter">
+            <h5>Newsletter</h5>
+            <p>Subscribe for fresh updates</p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Your email" required>
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <h4>Quick Links</h4>
-      <p><a href="index.html">Home</a></p>
-      <p><a href="products.html">Products</a></p>
-      <p><a href="about.html">About Us</a></p>
-      <p><a href="contact.html">Contact</a></p>
-    </div>
-    <div>
-      <h4>Customer Service</h4>
-      <p><a href="#shipping">Shipping Info</a></p>
-      <p><a href="#returns">Returns</a></p>
-      <p><a href="#faq">FAQ</a></p>
-      <p><a href="#privacy">Privacy Policy</a></p>
-    </div>
-    <div>
-      <h4>Get in Touch</h4>
-      <p>📞 <a href="tel:+94749768651">+94 74 976 8651</a></p>
-      <p>✉ <a href="mailto:organo@gmail.com">organo@gmail.com</a></p>
-      <p>🏠 No. 27, Lake Road, Kallady, Batticaloa, Sri Lanka</p>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Organo. All rights reserved. | Fresh from Farm to Table</p>
     </div>
   </footer>
 </div>
 
 <script>
+  // Profile Dropdown Toggle
+  function toggleProfile() {
+    const dropdown = document.getElementById('profileMenu');
+    dropdown.classList.toggle('active');
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    const dropdown = document.getElementById('profileMenu');
+    
+    if (!profileDropdown.contains(event.target)) {
+      dropdown.classList.remove('active');
+    }
+  });
+
+  // Theme Toggle Functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+  const isDark = localStorage.getItem('darkMode') === 'true';
+  
+  if (isDark) {
+    body.classList.add('dark');
+    themeToggle.textContent = '☀️';
+  }
+  
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    const darkMode = body.classList.contains('dark');
+    localStorage.setItem('darkMode', darkMode);
+    themeToggle.textContent = darkMode ? '☀️' : '🌙';
+  });
+
 const products = [
   {id:1,name:"Tomato",category:"vegetable",price:500.00,weight:"1kg",stock:10,off:10,desc:"Fresh ripe tomatoes sourced from local farms.",image:"images/tomato.jpg",color:"#e74c3c"},
   {id:2,name:"Potato",category:"vegetable",price:350.00,weight:"1kg",stock:0,off:0,desc:"Golden potatoes suitable for mashing, roasting, or frying.",image:"images/potato.jpg",color:"#d4a373"},
