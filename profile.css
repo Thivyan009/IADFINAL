@@ -1,0 +1,262 @@
+/* ===============================
+   Root variables for colors
+   =============================== */
+:root {
+  --primary-green: #2ecc71;   /* Main green color for buttons and highlights */
+  --light-green: #d4f5df;     /* Light green background for cards */
+  --dark-green: #1b5e20;      /* Dark green for text */
+  --background: #f9fff9;      /* Page background */
+}
+
+/* ===============================
+   General body styles
+   =============================== */
+body {
+  background: var(--background);
+  font-family: 'Poppins', sans-serif;
+  color: var(--dark-green);
+}
+
+/* ===============================
+   Main profile container (flex layout)
+   =============================== */
+.profile-container {
+  display: flex;       /* Sidebar + main content side by side */
+  gap: 24px;           /* Space between sidebar and main */
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;      /* Center container */
+}
+
+/* ===============================
+   Sidebar styles
+   =============================== */
+.profile-sidebar {
+  width: 260px;
+  position: sticky;    /* Sidebar stays on scroll */
+  top: 20px;           /* Offset from top */
+  align-self: start;
+}
+
+/* ===============================
+   Profile card inside sidebar
+   =============================== */
+.profile-card {
+  background: white;
+  border: 2px solid var(--light-green);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(46,204,113,0.1);
+}
+
+/* Avatar/profile picture wrapper */
+.avatar-wrapper {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 10px;
+  border-radius: 50%;          /* Circular image */
+  overflow: hidden;
+  border: 3px solid var(--primary-green);
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* Fit image without distortion */
+  display: block;
+}
+
+/* Profile name style */
+.profile-card h4 {
+  margin: 6px 0 0; 
+  color: var(--dark-green);
+}
+
+/* Button inside sidebar */
+.sidebar-actions button {
+  background: var(--primary-green);
+  border: none;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Sidebar navigation tabs */
+.profile-nav { 
+  margin-top: 18px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
+}
+
+.profile-nav .tab-btn {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--dark-green);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Active or hover tab */
+.profile-nav .tab-btn.active,
+.profile-nav .tab-btn:hover {
+  background: var(--primary-green);
+  color: white;
+}
+
+/* ===============================
+   Main content styles
+   =============================== */
+.profile-main { flex: 1; }
+
+/* Tabs content hidden by default */
+.tab-content { 
+  display: none; 
+  background: white; 
+  border-radius: 10px; 
+  padding: 18px; 
+  box-shadow: 0 4px 20px rgba(46,204,113,0.05); 
+}
+
+/* Show active tab */
+.tab-content.active { display: block; }
+
+/* Dashboard cards grid */
+.cards-grid { 
+  display: flex; 
+  gap: 12px; 
+  margin-top: 12px; 
+}
+
+.card { 
+  background: var(--light-green); 
+  border-radius: 10px; 
+  padding: 16px; 
+  flex: 1; 
+  text-align: center; 
+  color: var(--dark-green); 
+  font-weight: 600; 
+}
+
+/* Lists for orders, wishlist, addresses */
+.list { 
+  list-style: none; 
+  padding: 0; 
+  margin-top: 12px; 
+}
+
+.list li { 
+  background: white; 
+  border: 1px solid var(--light-green); 
+  padding: 10px; 
+  margin-bottom: 8px; 
+  border-radius: 8px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  box-shadow: 0 2px 6px rgba(46,204,113,0.05); 
+}
+
+/* Inline forms (addresses, wishlist) */
+.form-inline { 
+  display: flex; 
+  gap: 8px; 
+  margin-top: 12px; 
+}
+
+.form-inline input { 
+  flex: 1; 
+  padding: 8px; 
+  border-radius: 6px; 
+  border: 1px solid #ccc; 
+}
+
+/* All buttons */
+button { cursor: pointer; }
+
+/* ===============================
+   Responsive layout for smaller screens
+   =============================== */
+@media (max-width:900px) {
+  .profile-container { 
+    flex-direction: column; 
+    padding: 12px; 
+  }
+  .profile-sidebar { 
+    width: 100%; 
+    position: relative; 
+  }
+}
+
+/* ===============================
+   Green buttons with hover effect
+   =============================== */
+button, .btn, input[type="submit"] {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover, .btn:hover, input[type="submit"]:hover {
+    background-color: #43a047;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ===============================
+   Footer styles
+   =============================== */
+.footer {
+  background-color: #2e7d32;
+  color: #fff;
+  padding: 40px 20px;
+  margin-top: 40px;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-section h3, .footer-section h4 {
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-section p, .footer-section ul {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #c8e6c9;
+}
+
+.footer-section p {
+  margin: 6px 0;
+}
