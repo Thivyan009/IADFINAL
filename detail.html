@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organic Veggie Pack - Farm Fresh Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="product-card">
+    <div class="product-image">
+      <img src="images/offer1.jpg" alt="Organic Veggie Pack">
+    </div>
+    <div class="product-details">
+      <h2>Organic Veggie Pack</h2>
+      <p>Fresh organic vegetables including <span style="background:#ffecb3;color:#d84315;padding:2px 6px;border-radius:6px;font-weight:bold;">tomato</span>, <span style="background:#e0f7fa;color:#00695c;padding:2px 6px;border-radius:6px;font-weight:bold;">potato</span>, and <span style="background:#f1f8e9;color:#558b2f;padding:2px 6px;border-radius:6px;font-weight:bold;">carrot</span> sourced from local farms.</p>
+      <div class="tags">
+        <span class="tag">In Stock ✓</span>
+        <span class="tag">Pack of 3 🥕🥔🍅</span>
+        <span class="tag">8% Off 💰</span>
+      </div>
+      <div class="price">
+        <span class="old-price">LKR 1250.00</span>
+        <span class="new-price">LKR 1150.00</span>
+      </div>
+      <div class="quantity">
+        <button id="decrease">-</button>
+        <input type="text" id="quantity" value="1" readonly>
+        <button id="increase">+</button>
+      </div>
+      <div class="buttons">
+        <button class="add-btn">Add to Cart</button>
+        <button class="back-btn" onclick="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

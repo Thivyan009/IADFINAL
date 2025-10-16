@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresh Fruit Combo - Farm Fresh Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="product-card">
+    <div class="product-image">
+      <img src="images/offer2.jpg" alt="Fresh Fruit Combo">
+    </div>
+
+    <div class="product-details">
+      <h2>Fresh Fruit Combo</h2>
+  <p>Enjoy a healthy selection of fresh fruits including <span style="background:#ffe082;color:#d84315;padding:2px 6px;border-radius:6px;font-weight:bold;">apples</span>, <span style="background:#e1bee7;color:#6a1b9a;padding:2px 6px;border-radius:6px;font-weight:bold;">oranges</span>, and <span style="background:#b2dfdb;color:#00695c;padding:2px 6px;border-radius:6px;font-weight:bold;">bananas</span> — full of natural vitamins and freshness.</p>
+
+      <div class="tags">
+        <span class="tag">In Stock ✓</span>
+        <span class="tag">Combo Pack 🍎🍊🍌</span>
+        <span class="tag">10% Off 💰</span>
+      </div>
+
+      <div class="price">
+        <span class="old-price">LKR 1500.00</span>
+        <span class="new-price">LKR 1350.00</span>
+      </div>
+
+      <div class="quantity">
+        <button id="decrease">-</button>
+        <input type="text" id="quantity" value="1" readonly>
+        <button id="increase">+</button>
+      </div>
+
+      <div class="buttons">
+        <button class="add-btn">Add to Cart</button>
+        <button class="back-btn" onclick="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

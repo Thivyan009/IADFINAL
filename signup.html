@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Organo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ...existing code... -->
+
+  <div class="container">
+    <div class="left-side" style="background-image: url('images/signup.jpg');"></div>
+
+    <div class="right-side">
+      <h2>Create Your Account 🌿</h2>
+      <form onsubmit="return validateSignup()">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <div style="position:relative;">
+          <input type="password" id="password" placeholder="Password" required style="padding-right:36px;">
+          <span onclick="togglePassword('password', this)" style="position:absolute;top:0;right:18px;height:100%;display:flex;align-items:center;cursor:pointer;font-size:20px;color:#2e7d32;">
+            &#128065;
+          </span>
+        </div>
+        <div style="position:relative;">
+          <input type="password" id="confirmPassword" placeholder="Confirm Password" required style="padding-right:36px;">
+          <span onclick="togglePassword('confirmPassword', this)" style="position:absolute;top:0;right:18px;height:100%;display:flex;align-items:center;cursor:pointer;font-size:20px;color:#2e7d32;">
+            &#128065;
+          </span>
+        </div>
+        <a href="signin.html">
+          <button type="button">Sign Up</button>
+        </a>
+      </form>
+      <p>Already have an account? <a href="signin.html">Sign In</a></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') {
+        input.type = 'text';
+        el.innerHTML = '&#128064;'; // open eye
+      } else {
+        input.type = 'password';
+        el.innerHTML = '&#128065;'; // closed eye
+      }
+    }
+  </script>
+
+  <!-- ...existing code... -->
+</body>
+</html>
+
+
+

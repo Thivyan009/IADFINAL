@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meat combo pack </title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="product-card">
+    <div class="product-image">
+      <img src="images/offer3.jpg" alt="Meat Combo Pack">
+    </div>
+
+    <div class="product-details">
+      <h2>Meat Combo Pack</h2>
+  <p>Fresh organic meats including <span style="background:#ffe082;color:#d84315;padding:2px 6px;border-radius:6px;font-weight:bold;">chicken</span>, <span style="background:#b2dfdb;color:#00695c;padding:2px 6px;border-radius:6px;font-weight:bold;">beef</span>, and <span style="background:#ffccbc;color:#6d4c41;padding:2px 6px;border-radius:6px;font-weight:bold;">pork</span> sourced from local farms.</p>
+
+      <div class="tags">
+        <span class="tag">In Stock ✓</span>
+        <span class="tag">Pack of 3 🍗🥩🍖</span>
+        <span class="tag">10% 💰</span>
+      </div>
+
+      <div class="price">
+        <span class="old-price">LKR 3500.00</span>
+        <span class="new-price">LKR 3150.00</span>
+      </div>
+
+      <div class="quantity">
+        <button id="decrease">-</button>
+        <input type="text" id="quantity" value="1" readonly>
+        <button id="increase">+</button>
+      </div>
+
+      <div class="buttons">
+        <button class="add-btn">Add to Cart</button>
+        <button class="back-btn" onclick="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
