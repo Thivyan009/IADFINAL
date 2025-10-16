@@ -1,280 +1,324 @@
-// profile.js
-// This script handles: profile info, tabs, orders, wishlist, addresses using localStorage
+ // --- Simple DOM helpers ---
+// $ is a shorthand for document.querySelector
+// $$ is a shorthand for document.querySelectorAll but returns an array
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-(function(){
-  // ===============================
-  // Helper functions for convenience
-  // ===============================
-  function qs(sel, root=document){ return root.querySelector(sel); }       // Select first element
-  function qsa(sel, root=document){ return Array.from((root||document).querySelectorAll(sel)); } // Select all elements
-  function el(html){ const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; } // Create element from HTML string
+// --- Tabs functionality ---
+// Grab all tab buttons and sections
+const tabs = $$('.tab');
+const sections = $$('.section');
 
-  // ===============================
-  // LocalStorage helpers
-  // ===============================
-  function saveData(key, data){ 
-    try { 
-      localStorage.setItem(key, JSON.stringify(data)); 
-    } catch(e){ 
-      console.error('saveData', e); 
-    } 
+// Loop through each tab and add click event listener
+tabs.forEach(t => t.addEventListener('click', ()=>{
+  // Remove 'active' class from all tabs
+  tabs.forEach(x=>x.classList.remove('active'));
+  // Add 'active' class to clicked tab
+  t.classList.add('active');
+
+  // Remove 'active' class from all sections
+  sections.forEach(s=>s.classList.remove('active'));
+  // Show section corresponding to clicked tab using data-target attribute
+  document.getElementById(t.dataset.target).classList.add('active');
+}));
+
+// --- LocalStorage keys ---
+// These keys are used to store/retrieve data in localStorage
+const KEY_PROFILE = 'organo_profile_v2';
+const KEY_ADDR = 'organo_addresses_v2';
+const KEY_CARDS = 'organo_cards_v2';
+const KEY_ORDERS = 'organo_orders_v2';
+const KEY_FAVS = 'organo_favs_v2';
+
+// --- Initialize data from localStorage or defaults ---
+// If no data exists, set default values
+let profile = JSON.parse(localStorage.getItem(KEY_PROFILE)) || {name:'Guest', email:'', phone:'', pic:'avatar-placeholder.png'};
+let addresses = JSON.parse(localStorage.getItem(KEY_ADDR)) || [];
+let cards = JSON.parse(localStorage.getItem(KEY_CARDS)) || [];
+let orders = JSON.parse(localStorage.getItem(KEY_ORDERS)) || [];
+let favs = JSON.parse(localStorage.getItem(KEY_FAVS)) || [];
+
+// --- Quick references to frequently used UI elements ---
+const sidePic = $('#sidePic');        // Sidebar profile picture
+const sideName = $('#sideName');      // Sidebar profile name
+const welcomeName = $('#welcomeName');// Welcome message name
+const statOrders = $('#statOrders');  // Orders count
+const statFavourites = $('#statFavourites'); // Favourites count
+const statCards = $('#statCards');    // Cards count
+
+// --- Save all data to localStorage and refresh stats ---
+function persistAll(){ 
+  localStorage.setItem(KEY_PROFILE, JSON.stringify(profile));
+  localStorage.setItem(KEY_ADDR, JSON.stringify(addresses));
+  localStorage.setItem(KEY_CARDS, JSON.stringify(cards));
+  localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
+  localStorage.setItem(KEY_FAVS, JSON.stringify(favs));
+  refreshStats(); // Update counts on sidebar
+}
+
+// --- Render functions ---
+// Update profile info on UI
+function refreshProfileUI(){
+  sidePic.src = profile.pic || 'avatar-placeholder.png';
+  $('#profilePic').src = profile.pic || 'avatar-placeholder.png';
+  sideName.textContent = profile.name || 'Guest';
+  welcomeName.textContent = profile.name || 'Guest';
+  $('#name').value = profile.name || '';
+  $('#email').value = profile.email || '';
+  $('#phone').value = profile.phone || '';
+}
+
+// Update stats (orders, favourites, cards) on UI
+function refreshStats(){
+  statOrders.textContent = orders.length;
+  statFavourites.textContent = favs.length;
+  statCards.textContent = cards.length;
+}
+
+// --- Render addresses in UI ---
+function renderAddresses(){
+  const el = $('#addressList'); el.innerHTML=''; // Clear existing
+  if(addresses.length===0){ 
+    el.innerHTML='<div class="item"><div>No addresses saved</div></div>'; 
+    return; 
   }
-
-  function loadData(key, defaultValue){ 
-    try { 
-      const v = localStorage.getItem(key); 
-      return v ? JSON.parse(v) : defaultValue; 
-    } catch(e){ 
-      console.error('loadData', e); 
-      return defaultValue; 
-    } 
-  }
-
-  // ===============================
-  // Legacy key migration
-  // Maps old localStorage keys to new keys
-  // ===============================
-  var MIGRATION_MAP = {
-    'oa_profile': ['profile','user_profile','userProfile','profile_info'],
-    'oa_orders': ['orders','user_orders','order_list'],
-    'oa_wishlist': ['wishlist','fav','favorites'],
-    'oa_addresses': ['addresses','saved_addresses','address_list']
-  };
-
-  function migrateLegacyKeys(){
-    Object.keys(MIGRATION_MAP).forEach(function(dest){
-      try {
-        if(localStorage.getItem(dest)) return; // Skip if new key exists
-        var sources = MIGRATION_MAP[dest];
-        for(var i=0;i<sources.length;i++){
-          var s = sources[i];
-          var val = localStorage.getItem(s);
-          if(!val) continue;
-          try { 
-            var parsed = JSON.parse(val); 
-          }
-          catch(e){ 
-            parsed = dest==='oa_profile' ? { name: val } : [val]; 
-          }
-          localStorage.setItem(dest, JSON.stringify(parsed));
-          console.info('Migrated', s, '->', dest);
-          break;
-        }
-      } catch(e){ console.warn('migrate err', e); }
-    });
-  }
-
-  // ===============================
-  // Load profile info into UI
-  // ===============================
-  function loadProfileToUI(){
-    var profile = loadData('oa_profile', {name:'',email:'',phone:'',picture:''});
-    var displayName = qs('#displayName');
-    var displayEmail = qs('#displayEmail');
-    var displayPhone = qs('#displayPhone');
-    var profilePic = qs('#profilePic');
-
-    // Set sidebar display
-    if(displayName) displayName.textContent = profile.name || 'Your Name';
-    if(displayEmail) displayEmail.textContent = profile.email || 'email@example.com';
-    if(displayPhone) displayPhone.textContent = profile.phone || '';
-    if(profilePic){
-      if(profile.picture) profilePic.src = profile.picture;
-      else { profilePic.removeAttribute('src'); profilePic.alt='Profile picture'; }
-    }
-
-    // Set form inputs
-    var nameInput = qs('#nameInput'), emailInput = qs('#emailInput'), phoneInput = qs('#phoneInput');
-    if(nameInput) nameInput.value = profile.name || '';
-    if(emailInput) emailInput.value = profile.email || '';
-    if(phoneInput) phoneInput.value = profile.phone || '';
-
-    // Set dashboard greeting
-    var dashName = qs('#dashName');
-    if(dashName) dashName.textContent = profile.name || 'User';
-  }
-
-  // ===============================
-  // Bind profile form submit & reset
-  // ===============================
-  function bindProfileForm(){
-    var form = qs('#profileForm');
-    if(!form) return;
-    var picInput = qs('#picInput');
-
-    // Save profile on submit
-    form.addEventListener('submit', function(ev){
-      ev.preventDefault();
-
-      // Get input values
-      var name = (qs('#nameInput') && qs('#nameInput').value) ? qs('#nameInput').value.trim() : '';
-      var email = (qs('#emailInput') && qs('#emailInput').value) ? qs('#emailInput').value.trim() : '';
-      var phone = (qs('#phoneInput') && qs('#phoneInput').value) ? qs('#phoneInput').value.trim() : '';
-
-      var current = loadData('oa_profile', {name:'',email:'',phone:'',picture:''});
-      current.name = name; current.email = email; current.phone = phone;
-
-      // If new profile picture selected
-      var file = picInput && picInput.files && picInput.files[0];
-      if(file){
-        var reader = new FileReader();
-        reader.onload = function(e){
-          current.picture = e.target.result;
-          saveData('oa_profile', current);
-          loadProfileToUI();
-          alert('Profile saved.');
-          window.dispatchEvent(new CustomEvent('oa_profile_updated', {detail: current}));
-        };
-        reader.readAsDataURL(file);
-      } else {
-        saveData('oa_profile', current);
-        loadProfileToUI();
-        alert('Profile saved.');
-        window.dispatchEvent(new CustomEvent('oa_profile_updated', {detail: current}));
-      }
-
-      // Re-render other lists
-      renderOrders(); renderWishlist(); renderAddresses();
-    });
-
-    // Reset profile
-    var resetBtn = qs('#logoutBtn');
-    if(resetBtn) resetBtn.addEventListener('click', function(){
-      if(confirm('Reset profile to empty?')){
-        saveData('oa_profile', {name:'',email:'',phone:'',picture:''});
-        loadProfileToUI();
-      }
-    });
-  }
-
-  // ===============================
-  // Render Orders, Wishlist, Addresses
-  // ===============================
-  function renderOrders(){
-    var ordersList = qs('#ordersList');
-    if(!ordersList) return;
-    ordersList.innerHTML = '';
-    var orders = loadData('oa_orders', []);
-    if(!Array.isArray(orders) || orders.length===0){ ordersList.innerHTML = '<li>No orders</li>'; return; }
-    orders.forEach(function(p){
-      var li = el('<li><div style="display:flex;align-items:center;gap:12px;"><img src="'+(p.image||'')+'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;"><div><div>'+ (p.title||'Item') +'</div><div style="font-weight:600;">LKR '+ (p.price||0) +'.00</div></div></div><div>'+ (p.qty||1) +'</div></li>');
-      ordersList.appendChild(li);
-    });
-    var ordersCount = qs('#ordersCount');
-    if(ordersCount) ordersCount.textContent = orders.length;
-  }
-
-  function renderWishlist(){
-    var wishlistList = qs('#wishlistList');
-    if(!wishlistList) return;
-    wishlistList.innerHTML = '';
-    var wishlist = loadData('oa_wishlist', []);
-    if(!Array.isArray(wishlist) || wishlist.length===0){ wishlistList.innerHTML = '<li>No items in wishlist</li>'; return; }
-    wishlist.forEach(function(p){
-      var li = el('<li><div style="display:flex;align-items:center;gap:12px;"><img src="'+(p.image||'')+'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;"><div><div>'+ (p.title||'Item') +'</div><div style="font-weight:600;">LKR '+ (p.price||0) +'.00</div></div></div></li>');
-      wishlistList.appendChild(li);
-    });
-    var wishlistCount = qs('#wishlistCount');
-    if(wishlistCount) wishlistCount.textContent = wishlist.length;
-  }
-
-  function renderAddresses(){
-    var addrList = qs('#addressList') || qs('#savedAddressList') || qs('#savedAddresses') || qs('#addressListContainer');
-    if(!addrList) return;
-    addrList.innerHTML = '';
-    var addresses = loadData('oa_addresses', []);
-    if(!Array.isArray(addresses) || addresses.length===0){ addrList.innerHTML = '<li>No saved addresses</li>'; return; }
-    addresses.forEach(function(a){
-      var li = el('<li><div><strong>'+ (a.label||'Address') +'</strong><div>'+ (a.line1||'') +' '+ (a.city||'') +' '+ (a.postal||'') +'</div></div></li>');
-      addrList.appendChild(li);
-    });
-  }
-
-  // ===============================
-  // Tabs switching logic
-  // ===============================
-  function bindTabs(){
-    var buttons = qsa('.tab-btn');
-    var contents = qsa('.tab-content');
-
-    buttons.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var tab = btn.getAttribute('data-tab');
-
-        // Remove active from all buttons and tabs
-        buttons.forEach(function(b){ b.classList.remove('active'); });
-        contents.forEach(function(c){ c.classList.remove('active'); });
-
-        // Activate clicked tab
-        btn.classList.add('active');
-        var target = qs('#' + tab);
-        if(target) target.classList.add('active');
-      });
-    });
-
-    // Edit profile button opens settings tab
-    var editBtn = qs('#editProfileBtn');
-    if(editBtn){
-      editBtn.addEventListener('click', function(){
-        var settingsBtn = qsa('.tab-btn').filter(function(b){ return b.getAttribute('data-tab')==='settings'; })[0];
-        if(settingsBtn) settingsBtn.click();
-        setTimeout(function(){ var ni = qs('#nameInput'); if(ni) ni.focus(); }, 100);
-      });
-    }
-  }
-
-  // ===============================
-  // Initialize everything on page load
-  // ===============================
-  document.addEventListener('DOMContentLoaded', function(){
-    try { migrateLegacyKeys(); } catch(e){}
-
-    loadProfileToUI();
-    bindProfileForm();
-    renderOrders();
-    renderWishlist();
-    renderAddresses();
-    bindTabs();
-
-    // Optional clear buttons
-    var clearOrders = qs('#clearOrders'); 
-    if(clearOrders) clearOrders.addEventListener('click', function(){ 
-      if(confirm('Clear orders?')){ 
-        saveData('oa_orders', []); 
-        renderOrders(); 
-      } 
-    });
-
-    var clearWishlist = qs('#clearWishlist'); 
-    if(clearWishlist) clearWishlist.addEventListener('click', function(){ 
-      if(confirm('Clear wishlist?')){ 
-        saveData('oa_wishlist', []); 
-        renderWishlist(); 
-      } 
-    });
-
-    var clearAddresses = qs('#clearAddresses'); 
-    if(clearAddresses) clearAddresses.addEventListener('click', function(){ 
-      if(confirm('Clear addresses?')){ 
-        saveData('oa_addresses', []); 
-        renderAddresses(); 
-      } 
-    });
-
-    // Re-render if localStorage changes in another tab
-    window.addEventListener('storage', function(e){
-      if(e.key && e.key.indexOf('oa_')===0){
-        setTimeout(function(){ 
-          renderOrders(); 
-          renderWishlist(); 
-          renderAddresses(); 
-          loadProfileToUI(); 
-        }, 50);
-      }
-    });
+  addresses.forEach((a,i)=>{
+    const div = document.createElement('div'); div.className='item';
+    div.innerHTML = `<div class="meta">
+      <div>
+        <strong>${a.label}</strong><div style="font-size:13px;color:#6b7280">${a.text}</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn-small btn-edit" onclick="editAddress(${i})">Edit</button>
+      <button class="btn-small btn-remove" onclick="removeAddress(${i})">Remove</button>
+    </div>`;
+    el.appendChild(div);
   });
+}
 
-  // Expose debug helpers
-  window.oa = { saveData, loadData, migrateLegacyKeys };
+// --- Render saved cards in UI ---
+function renderCards(){
+  const el = $('#cards'); el.innerHTML='';
+  if(cards.length===0){ 
+    el.innerHTML='<div class="item">No cards saved</div>'; 
+    return; 
+  }
+  cards.forEach((c,i)=>{
+    const div = document.createElement('div'); div.className='item';
+    div.innerHTML = `<div class="meta">
+      <div>
+        <strong>${c.name}</strong><div style="font-size:13px;color:#6b7280">•••• ${c.number.slice(-4)} • Exp ${c.expiry}</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn-small btn-remove" onclick="removeCard(${i})">Remove</button>
+    </div>`;
+    el.appendChild(div);
+  });
+}
 
-})();
+// --- Render orders in UI ---
+function renderOrders(){
+  const el = $('#ordersList'); el.innerHTML='';
+  if(orders.length===0){ 
+    el.innerHTML='<div class="item">No orders yet</div>'; 
+    return; 
+  }
+  orders.forEach((o,i)=>{
+    const div = document.createElement('div'); div.className='item';
+    div.innerHTML = `<div class="meta">
+      <img src="order-placeholder.png" alt="p"/>
+      <div><strong>${o.product}</strong><div style="font-size:13px;color:#6b7280">Qty: ${o.qty} • ${o.status}</div></div>
+    </div>
+    <div>
+      <button class="btn-small btn-edit" onclick="editOrder(${i})">Edit</button>
+      <button class="btn-small btn-remove" onclick="removeOrder(${i})">Remove</button>
+    </div>`;
+    el.appendChild(div);
+  });
+}
+
+// --- Render favourites in UI ---
+function renderFavs(){
+  const el = $('#favList'); el.innerHTML='';
+  if(favs.length===0){ 
+    el.innerHTML='<div class="item">No favourites yet</div>'; 
+    return; 
+  }
+  favs.forEach((f,i)=>{
+    const div = document.createElement('div'); div.className='item';
+    div.innerHTML = `<div class="meta"><div><strong>${f}</strong></div></div><div><button class="btn-small btn-remove" onclick="removeFav(${i})">Remove</button></div>`;
+    el.appendChild(div);
+  });
+}
+
+// --- CRUD helpers (accessible globally) ---
+// Edit address: populate input fields with selected address
+window.editAddress = i=>{
+  const a = addresses[i]; 
+  $('#addrLabel').value = a.label; 
+  $('#addrText').value = a.text; 
+  $('#saveAddr').dataset.edit = i; 
+  tabs.forEach(t=>t.classList.remove('active')); 
+  document.querySelector('[data-target="addresses"]').classList.add('active'); 
+  sections.forEach(s=>s.classList.remove('active')); 
+  document.getElementById('addresses').classList.add('active');
+}
+
+// Remove address
+window.removeAddress = i=>{ 
+  if(confirm('Remove address?')){ 
+    addresses.splice(i,1); 
+    persistAll(); 
+    renderAddresses(); 
+  } 
+}
+
+// Remove saved card
+window.removeCard = i=>{ 
+  if(confirm('Remove card?')){ 
+    cards.splice(i,1); 
+    persistAll(); 
+    renderCards(); 
+  } 
+}
+
+// Edit order: populate order form
+window.editOrder = i=>{
+  const o = orders[i]; 
+  $('#orderProduct').value=o.product; 
+  $('#orderQty').value=o.qty; 
+  $('#orderStatus').value=o.status; 
+  $('#addOrder').dataset.edit=i; 
+  tabs.forEach(t=>t.classList.remove('active')); 
+  document.querySelector('[data-target="orders"]').classList.add('active'); 
+  sections.forEach(s=>s.classList.remove('active')); 
+  document.getElementById('orders').classList.add('active');
+}
+
+// Remove order
+window.removeOrder = i=>{ 
+  if(confirm('Remove order?')){ 
+    orders.splice(i,1); 
+    persistAll(); 
+    renderOrders(); 
+  } 
+}
+
+// Remove favourite
+window.removeFav = i=>{ 
+  if(confirm('Remove favourite?')){ 
+    favs.splice(i,1); 
+    persistAll(); 
+    renderFavs(); 
+  } 
+}
+
+// --- Event bindings for buttons ---
+// Save or update address
+$('#saveAddr').addEventListener('click', ()=>{
+  const label = $('#addrLabel').value.trim(), text = $('#addrText').value.trim();
+  if(!label || !text){ alert('Provide label and address'); return; }
+  const edit = $('#saveAddr').dataset.edit;
+  if(edit!==undefined && edit!==''){ 
+    addresses[+edit] = {label,text}; 
+    delete $('#saveAddr').dataset.edit; 
+  } else { 
+    addresses.push({label,text}); 
+  }
+  $('#addrLabel').value=''; $('#addrText').value=''; 
+  persistAll(); renderAddresses();
+});
+
+// Add new card
+$('#addCard').addEventListener('click', ()=>{
+  const name = $('#cardName').value.trim(), number = $('#cardNumber').value.replace(/\s+/g,''), expiry = $('#cardExpiry').value.trim();
+  if(!name||!number||!expiry){ alert('Fill card details'); return; }
+  cards.push({name,number,expiry}); 
+  $('#cardName').value=''; $('#cardNumber').value=''; $('#cardExpiry').value=''; 
+  persistAll(); renderCards();
+});
+
+// Add or edit order
+$('#addOrder').addEventListener('click', ()=>{
+  const product = $('#orderProduct').value.trim(), qty = +$('#orderQty').value || 1, status = $('#orderStatus').value;
+  if(!product){ alert('Product required'); return; }
+  const edit = $('#addOrder').dataset.edit;
+  if(edit!==undefined && edit!==''){ 
+    orders[+edit] = {product,qty,status}; 
+    delete $('#addOrder').dataset.edit; 
+  } else { 
+    orders.push({product, qty, status}); 
+  }
+  $('#orderProduct').value=''; $('#orderQty').value=''; 
+  persistAll(); renderOrders();
+});
+
+// Add favourite
+$('#addFav').addEventListener('click', ()=>{
+  const p = $('#favProduct').value.trim();
+  if(!p) return alert('Product name required'); 
+  favs.push(p); 
+  $('#favProduct').value=''; 
+  persistAll(); renderFavs();
+});
+
+// Save profile
+$('#saveProfile').addEventListener('click', ()=>{
+  profile.name = $('#name').value.trim();
+  profile.email = $('#email').value.trim();
+  profile.phone = $('#phone').value.trim();
+  persistAll(); refreshProfileUI(); 
+  alert('Profile saved');
+});
+
+// Upload profile picture
+$('#uploadPic').addEventListener('change', e=>{
+  const file = e.target.files[0]; 
+  if(!file) return;
+  const reader = new FileReader(); 
+  reader.onload = ()=>{ 
+    profile.pic = reader.result; 
+    persistAll(); 
+    refreshProfileUI(); 
+  }; 
+  reader.readAsDataURL(file);
+});
+
+// Quick edit: jump to settings tab
+$('#editQuickProfile').addEventListener('click', ()=>{
+  tabs.forEach(t=>t.classList.remove('active')); 
+  document.querySelector('[data-target="settings"]').classList.add('active'); 
+  sections.forEach(s=>s.classList.remove('active')); 
+  document.getElementById('settings').classList.add('active');
+});
+
+// Export all data as JSON
+$('#downloadData').addEventListener('click', ()=>{
+  const data = {profile, addresses, cards, orders, favs, exportedAt: new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'organo-data.json'; a.click(); 
+  URL.revokeObjectURL(url);
+});
+
+// Logout and clear localStorage
+$('#confirmLogout').addEventListener('click', ()=>{
+  if(confirm('Clear local data and logout?')){ 
+    localStorage.removeItem(KEY_PROFILE); 
+    localStorage.removeItem(KEY_ADDR); 
+    localStorage.removeItem(KEY_CARDS); 
+    localStorage.removeItem(KEY_ORDERS); 
+    localStorage.removeItem(KEY_FAVS); 
+    location.reload(); 
+  }
+});
+
+// --- Initial load: render UI with stored/default data ---
+persistAll();
+refreshProfileUI();
+renderAddresses();
+renderCards();
+renderOrders();
+renderFavs();
