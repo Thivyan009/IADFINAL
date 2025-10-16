@@ -1,0 +1,432 @@
+ /* ============================================
+   GLOBAL STYLES & VARIABLES
+============================================ */
+
+/* Universal selector: ensures padding/border included in total size */
+* { box-sizing: border-box }
+
+/* Root variables to easily reuse theme colors and radius */
+:root {
+  --bg1: #f6fff5;          /* light green background */
+  --accent: #56ab2f;       /* primary green accent color */
+  --muted: #6b7280;        /* grey text color */
+  --card-radius: 14px;     /* common card corner radius */
+}
+
+/* Body: sets main font, color theme, and gradient background */
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
+  background: linear-gradient(160deg, #eaffd8, #e6f7ee);
+  color: #0f172a; /* dark navy text for readability */
+}
+
+/* Container: uses flexbox to align sidebar and content side-by-side */
+.container {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+/* ============================================
+   SIDEBAR STYLING
+============================================ */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #237A2C 0%, #60C470 100%);
+  color: #fff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+/* Top section: avatar + name + edit icon */
+.sidebar-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Sidebar profile image */
+.sidebar-top img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Sidebar name and quick edit icon alignment */
+.side-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+/* Sidebar name text */
+.side-info #sideName {
+  font-weight: 600;
+}
+
+/* Edit icon button */
+.icon-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ============================================
+   NAVIGATION MENU
+============================================ */
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Sidebar tab buttons */
+.nav li {
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.18s;
+}
+
+/* Hover and active effects for tabs */
+.nav li.active, .nav li:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(4px);
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+============================================ */
+.content {
+  flex: 1;
+  padding: 20px 28px;
+  overflow: auto;
+}
+
+/* Top header inside main area */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Cards row for dashboard stats */
+.cards-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Small stat cards (orders, favourites, etc.) */
+.stat-card {
+  flex: 1;
+  padding: 18px;
+  border-radius: 12px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-card h3 { font-size: 20px; margin: 0 }
+.stat-card p { opacity: .9; margin: 0 }
+
+/* Color variations for different cards */
+.stat-card.green { background: linear-gradient(90deg, #2ebf62, #237a2c) }
+.stat-card.orange { background: linear-gradient(90deg, #ffb366, #ff7a00) }
+.stat-card.teal { background: linear-gradient(90deg, #2ec4c4, #0b8a8a) }
+
+/* ============================================
+   SECTION LAYOUTS
+============================================ */
+.section { display: none }
+.section.active { display: block }
+
+/* Grid layout for sections (main panel + form panel) */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 14px;
+}
+
+/* Basic panel (card) design */
+.panel {
+  background: var(--bg1);
+  padding: 14px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+/* Form fields inside right panels */
+.form-panel input, .form-panel textarea, .form-panel select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid #e6e9ee;
+}
+
+/* Form button styling */
+.form-panel button {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ============================================
+   LIST ITEMS AND BUTTONS
+============================================ */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* Each item block (e.g. order, favourite, address) */
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffffff, #fbfff8);
+  border: 1px solid #eef6ea;
+}
+
+/* Item meta section with icon/image */
+.item .meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.item .meta img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Small color badge labels */
+.badge {
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #fff;
+}
+
+/* Reusable button classes */
+.btn-small {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.btn-edit { background: #ffd34d; color: #000 }
+.btn-remove { background: #ff6b6b; color: #fff }
+
+/* ============================================
+   PROFILE SETTINGS
+============================================ */
+.profile-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.profile-row img {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Profile form input styles */
+.profile-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #e6e9ee;
+}
+
+/* Header buttons (e.g. Export Data) */
+.header-actions button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #0b8a8a;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN (MOBILE VIEW)
+============================================ */
+@media (max-width: 980px) {
+  .section-grid { grid-template-columns: 1fr; }
+  .sidebar { display: none } /* hides sidebar on smaller screens */
+}
+
+/* ============================================
+   ENHANCEMENTS (Visual Improvements)
+============================================ */
+
+/* 1. Larger profile image in navbar */
+.navbar .profile-pic {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.navbar .profile-pic:hover {
+  transform: scale(1.05);
+}
+
+/* 2. Advanced buttons with animation and shadows */
+button, input[type="submit"], input[type="button"], input[type="file"]::file-selector-button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover, input[type="submit"]:hover, input[type="button"]:hover, input[type="file"]::file-selector-button:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 3. Leaf-themed background pattern for natural feel */
+.white-section {
+  background: linear-gradient(to bottom right, #f6fff6, #e8f5e9);
+  background-image: url('https://www.transparenttextures.com/patterns/leaves.png');
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* ============================================
+   PROFILE AND BACKGROUND ADJUSTMENTS (v2)
+============================================ */
+
+/* Enlarged profile picture and hover effect */
+.navbar .profile-pic {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.navbar .profile-pic:hover { transform: scale(1.08) }
+
+/* Larger font for profile name */
+.navbar .profile-name {
+  font-size: 1.3rem !important;
+  font-weight: 600;
+}
+
+/* More visible leaf pattern in background */
+.white-section {
+  background: linear-gradient(to bottom right, #f3fff3, #e0f2e9);
+  background-image: url('https://www.transparenttextures.com/patterns/green-leaves.png');
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  background-blend-mode: lighten;
+}
+
+/* ============================================
+   TARGETED ELEMENTS IN THIS PAGE
+============================================ */
+
+/* Profile image in sidebar */
+#sidePic {
+  width: 90px !important;
+  height: 90px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+  border: 3px solid rgba(46,125,50,0.12);
+}
+#sidePic:hover { transform: scale(1.06) }
+
+/* Profile name beside sidebar picture */
+#sideName {
+  font-size: 1.25rem !important;
+  font-weight: 700;
+  margin-top: 8px;
+  color: #1b5e20;
+}
+
+/* Leafy gradient + blurred background for main area */
+.content {
+  background: linear-gradient(135deg, #f3fff3 0%, #e6f7ea 100%);
+  background-image: url('https://www.transparenttextures.com/patterns/green-leaves.png');
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* ============================================
+   BLURRED BACKGROUND AND FONT ENHANCEMENTS
+============================================ */
+.content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  background-image: url('background.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar name color update for clarity */
+#sideName {
+  color: #000000 !important;
+}
+
+/* ============================================
+   FINAL ORGANIC BACKGROUND & SHADOW
+============================================ */
+.content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  background-image: url('background.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+}
+
+/* Final profile name color */
+#sideName {
+  color: #000 !important;
+}

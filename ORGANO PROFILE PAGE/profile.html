@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic setup for character encoding and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- Page title -->
+  <title>Organo | Profile</title>
+
+  <!-- External CSS file link -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Main container that holds sidebar and main content -->
+  <div class="container">
+
+    <!-- Sidebar: contains user info and navigation menu -->
+    <aside class="sidebar">
+
+      <!-- Top part of sidebar showing profile image and name -->
+      <div class="sidebar-top">
+        <img id="sidePic" src="avatar-placeholder.jpg" alt="avatar" />
+        <div class="side-info">
+          <div id="sideName">Guest</div>
+          <!-- Edit quick profile button (small pencil icon) -->
+          <button id="editQuickProfile" class="icon-btn" title="Edit profile">✎</button>
+        </div>
+      </div>
+
+      <!-- Navigation menu items -->
+      <nav class="nav">
+        <ul>
+          <!-- Each <li> is a clickable tab that shows a different section -->
+          <li class="tab active" data-target="dashboard">Dashboard</li>
+          <li class="tab" data-target="orders">Orders</li>
+          <li class="tab" data-target="favourites">Favourites</li>
+          <li class="tab" data-target="addresses">Addresses</li>
+          <li class="tab" data-target="payment">Payment Methods</li>
+          <li class="tab" data-target="settings">Settings</li>
+          <li class="tab" data-target="logout">Logout</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="content">
+
+      <!-- Header part with title and data export button -->
+      <header class="content-header">
+        <h1 id="pageTitle">Organo — Your Organic Hub</h1>
+        <div class="header-actions">
+          <button id="downloadData">Export Data</button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD SECTION -->
+      <section id="dashboard" class="section active">
+        <div class="cards-row">
+          <!-- Small cards showing summary statistics -->
+          <div class="stat-card green">
+            <h3 id="statOrders">0</h3>
+            <p>Orders</p>
+          </div>
+          <div class="stat-card orange">
+            <h3 id="statFavourites">0</h3>
+            <p>Favourites</p>
+          </div>
+          <div class="stat-card teal">
+            <h3 id="statCards">0</h3>
+            <p>Saved Cards</p>
+          </div>
+        </div>
+
+        <!-- Welcome message -->
+        <div class="welcome">
+          <h2>Welcome, <span id="welcomeName">Guest</span> 🌿</h2>
+          <p>Manage your profile, orders, addresses and payments all in one place.</p>
+        </div>
+      </section>
+
+      <!-- ORDERS SECTION -->
+      <section id="orders" class="section">
+        <div class="section-grid">
+          <!-- Left panel showing list of orders -->
+          <div class="panel">
+            <h2>Orders</h2>
+            <div id="ordersList" class="list"></div>
+          </div>
+
+          <!-- Right panel to add a new order -->
+          <div class="panel form-panel">
+            <h3>Add Order</h3>
+            <input id="orderProduct" placeholder="Product name" />
+            <input id="orderQty" type="number" placeholder="Quantity" />
+            <select id="orderStatus">
+              <option>Pending</option>
+              <option>Processing</option>
+              <option>Delivered</option>
+              <option>Cancelled</option>
+            </select>
+            <button id="addOrder">Add Order</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAVOURITES SECTION -->
+      <section id="favourites" class="section">
+        <div class="section-grid">
+          <!-- Left panel shows favourite items list -->
+          <div class="panel">
+            <h2>Favourites</h2>
+            <div id="favList" class="list"></div>
+          </div>
+
+          <!-- Right panel allows adding new favourites -->
+          <div class="panel form-panel">
+            <h3>Add to Favourites</h3>
+            <input id="favProduct" placeholder="Product name" />
+            <button id="addFav">Add Favourite</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADDRESSES SECTION -->
+      <section id="addresses" class="section">
+        <div class="section-grid">
+          <!-- List of saved addresses -->
+          <div class="panel">
+            <h2>Saved Addresses</h2>
+            <div id="addressList" class="list"></div>
+          </div>
+
+          <!-- Form to add or edit address -->
+          <div class="panel form-panel">
+            <h3>Add / Edit Address</h3>
+            <input id="addrLabel" placeholder="Label (Home / Farm / Work)" />
+            <textarea id="addrText" rows="4" placeholder="Full address"></textarea>
+            <button id="saveAddr">Save Address</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAYMENT METHODS SECTION -->
+      <section id="payment" class="section">
+        <div class="section-grid">
+          <!-- List of saved cards -->
+          <div class="panel">
+            <h2>Payment Methods</h2>
+            <div id="cards" class="list"></div>
+          </div>
+
+          <!-- Add new card form -->
+          <div class="panel form-panel">
+            <h3>Add Card</h3>
+            <input id="cardName" placeholder="Cardholder name" />
+            <input id="cardNumber" placeholder="Card number" />
+            <input id="cardExpiry" placeholder="MM/YY" />
+            <button id="addCard">Add Card</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS SECTION -->
+      <section id="settings" class="section">
+        <div class="panel">
+          <h2>Profile Settings</h2>
+          <div class="profile-row">
+            <!-- Profile picture and editable user details -->
+            <img id="profilePic" src="avatar-placeholder.jpg" alt="Profile" />
+            <div class="profile-form">
+              <input id="name" placeholder="Full name" />
+              <input id="email" placeholder="Email" />
+              <input id="phone" placeholder="Phone" />
+              <input id="uploadPic" type="file" accept="image/*" />
+              <button id="saveProfile">Save Profile</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGOUT SECTION -->
+      <section id="logout" class="section">
+        <div class="panel">
+          <h2>Logout</h2>
+          <p>Clearing local data will log you out of this demo.</p>
+          <button id="confirmLogout">Clear & Logout</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JavaScript file link for interactivity -->
+  <script src="script.js"></script>
+</body>
+</html>
